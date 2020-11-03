@@ -1,0 +1,16 @@
+{
+  "name": "user",
+  "version": "1.0.0",
+  "description": "User management for Admin Panel.",
+  "main": "handler.php",
+  "keywords": [
+    "serverless",
+    "openwhisk"
+  ],
+  "devDependencies": {
+    "serverless-openwhisk": ">=0.13.0"
+  },
+  "dependencies": {
+    "cookielib": "^1.1.3"
+  }
+}

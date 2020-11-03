@@ -1,0 +1,21 @@
+service: user
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  getToken:
+    handler: handler.getToken
+    name: user/getToken
+    events:
+      - http: POST user/getToken
+  checkToken:
+    handler: handler.checkToken
+    name: user/checkToken
+    events:
+      - http: POST user/checkToken
+
+plugins:
+  - serverless-openwhisk
