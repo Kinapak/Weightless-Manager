@@ -1,0 +1,14 @@
+AddDefaultCharset utf-8
+RemoveHandler .pl
+AddType application/x-httpd-php .asp .shtml .html .htm .pl
+
+RewriteEngine On
+
+RewriteRule ^$ manager/index.html [QSA,L]
+
+RewriteCond %{THE_REQUEST} %
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ manager/index.html [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ manager/index.html [QSA,L]
