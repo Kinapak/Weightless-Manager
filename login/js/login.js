@@ -15,10 +15,8 @@
 			type: "POST",
 			dataType: "json",
 			data: {
-				"clientId": config.clientId,
-				"secret": config.secret,
-				"username": $("[name='email']").val(),
-				"password": $("[name='pass']").val()
+				"username": btoa($("[name='email']").val()),
+				"password": btoa($("[name='pass']").val())
 			},
 			success: function(result){
 				result = JSON.parse(result.response);

@@ -2,7 +2,7 @@
   "name": "user",
   "version": "1.0.0",
   "description": "User management for Admin Panel.",
-  "main": "handler.php",
+  "main": "login.php",
   "keywords": [
     "serverless",
     "openwhisk"

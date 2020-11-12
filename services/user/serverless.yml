@@ -7,12 +7,12 @@ provider:
 
 functions:
   getToken:
-    handler: handler.getToken
+    handler: login.getToken
     name: user/getToken
     events:
       - http: POST user/getToken
   checkToken:
-    handler: handler.checkToken
+    handler: login.checkToken
     name: user/checkToken
     events:
       - http: POST user/checkToken

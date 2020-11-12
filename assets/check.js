@@ -19,8 +19,6 @@ function checkToken(){
 		type: "POST",
 		dataType: "json",
 		data: {
-			"clientId": config.clientId,
-			"secret": config.secret,
 			"token": token
 		},
 		success: function(result){
