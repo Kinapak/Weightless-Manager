@@ -21,13 +21,9 @@
 			success: function(result){
 				result = JSON.parse(result.response);
 				
-				// Если пришел токен, установка куки с ним в миллисекундах
+				// Если пришел токен, то запоминаем его
 				if(result.access_token){
-					setCookie(
-						"token",
-						result.access_token,
-						{"expires": new Date(new Date().getTime() + result.expires_in * 1000)}
-					);
+					localStorage.setItem("token", result.access_token);
 					//todo переход в панель
 				}
 			}
