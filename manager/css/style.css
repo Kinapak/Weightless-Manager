@@ -805,7 +805,21 @@ ul li a:focus {
 }
 
 .padding-0 {
-  padding: 0px;
+  padding: 0;
+}
+
+.wrp {
+   padding: 20px;
+}
+
+@media(max-width: 767px){
+   .wrp {
+      padding: 20px 0;
+   }
+   
+   .card-wrap > div {
+      padding: 0;
+   }
 }
 
 .fc {
