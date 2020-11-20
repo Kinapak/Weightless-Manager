@@ -10,6 +10,8 @@
 	$("#login-form").on("submit", function(e){
 		e.preventDefault();
 		
+		$(this).find("[type='submit']").html("<i class='fa fa-spinner fa-pulse fa-2x'></i>").attr("type", "button");
+		
 		$.ajax({
 			url: config.api_login + "/token",
 			type: "POST",
@@ -24,7 +26,7 @@
 				// Если пришел токен, то запоминаем его
 				if(result.access_token){
 					localStorage.setItem("token", result.access_token);
-					//todo переход в панель
+					location.href = "/";
 				}
 			}
 		});
