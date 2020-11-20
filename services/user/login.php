@@ -34,8 +34,9 @@
 	
 	// Проверка токена пользователя на валидность
 	function checkToken(array $args): array{
-		$curl = curl_init();
+		global $client_id, $secret, $tenant_id;
 		
+		$curl = curl_init();
 		curl_setopt_array($curl, array(
 		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/oauth/v4/".$tenant_id."/introspect",
 		 CURLOPT_RETURNTRANSFER => true,
@@ -47,9 +48,7 @@
 		 ),
 		 CURLOPT_POSTFIELDS => "token=".$args["token"]
 		));
-		
 		$response = curl_exec($curl);
-		
 		curl_close($curl);
 		
 		return ["response" => $response]; // Возвращает active: true || false
