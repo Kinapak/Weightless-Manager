@@ -1,0 +1,64 @@
+<div class="col-md-12 card-wrap padding-0">
+	<div class="col-md-6">
+		<div class="panel box-v1">
+			<div class="panel-heading bg-white border-none">
+				<div class="col-md-6 col-sm-6 col-xs-6 text-left padding-0">
+					<h4 class="text-left">Добавить новую базу данных</h4>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-6 text-right">
+					<h4>
+						<span class="fa fa-database text-right"></span>
+					</h4>
+				</div>
+			</div>
+			<div class="panel-body text-center">
+				
+				<form action="" method="post">
+					<div class="form-group form-animate-text">
+						<input type="text" name="name" class="form-text" required>
+						<span class="bar"></span>
+						<label>Название (отображается в меню)</label>
+					</div>
+					<div class="form-group form-animate-text">
+						<input type="text" name="ip" class="form-text mask-ip_address" required>
+						<span class="bar"></span>
+						<label>IP адрес</label>
+					</div>
+					<div class="form-group form-animate-text">
+						<input type="text" name="user" class="form-text" required>
+						<span class="bar"></span>
+						<label>Пользователь</label>
+					</div>
+					<div class="form-group form-animate-text">
+						<input type="password" name="password" class="form-text" required>
+						<span class="bar"></span>
+						<label>Пароль</label>
+					</div>
+					<div class="form-group form-animate-text">
+						<input type="text" name="db" class="form-text" required>
+						<span class="bar"></span>
+						<label>База данных</label>
+					</div>
+					<div class="form-group form-animate-text">
+						<select name="type" class="form-control">
+							<option value="0" selected disabled>Тип базы данных</option>
+							<option value="mysql">MySQL</option>
+						</select>
+					</div>
+					<input type="submit" class="btn btn-round btn-primary" value="Добавить">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="/manager/js/plugins/jquery.mask.min.js"></script>
+<script type="text/javascript">
+	$('.mask-ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+		translation: {
+			'Z': {
+				pattern: /[0-9]/, optional: true
+			}
+		}
+	});
+</script>
