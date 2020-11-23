@@ -17,5 +17,11 @@ functions:
     events:
       - http: POST user/checkToken
 
+  getallAttrs:
+    handler: attributes.getAllAttrs
+    name: user/getAllAttrs
+    events:
+      - http: POST user/getAllAttrs
+
 plugins:
   - serverless-openwhisk
