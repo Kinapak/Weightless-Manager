@@ -13,7 +13,7 @@
 		$(this).find("[type='submit']").html("<i class='fa fa-spinner fa-pulse fa-2x'></i>").attr("type", "button");
 		
 		$.ajax({
-			url: config.api_login + "/token",
+			url: config.api_user_login + "/token",
 			type: "POST",
 			dataType: "json",
 			data: {

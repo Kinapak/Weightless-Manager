@@ -20,7 +20,7 @@ function checkToken(){
 	}
 	
 	$.ajax({
-		url: config.api_login + "/check",
+		url: config.api_user_login + "/check",
 		type: "POST",
 		dataType: "json",
 		data: {
