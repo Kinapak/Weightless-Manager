@@ -1,0 +1,16 @@
+service: database
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  addDB:
+    handler: management.addDB
+    name: database/addDB
+    events:
+      - http: POST database/addDB
+
+plugins:
+  - serverless-openwhisk
