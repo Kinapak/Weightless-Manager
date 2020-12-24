@@ -2181,11 +2181,11 @@ ul li a:focus{
 	height: 55px;
 	color: #fff;
 	border: none;
-   background: #9053c7;
-   background: -webkit-linear-gradient(-90deg, #c850c0, #4158d0);
-   background: -o-linear-gradient(-90deg, #c850c0, #4158d0);
-   background: -moz-linear-gradient(-90deg, #c850c0, #4158d0);
-   background: linear-gradient(-90deg, #c850c0, #4158d0);
+	background: #92d2d8;
+	background: -webkit-linear-gradient(-90deg, #89d8ca, #9face6);
+	background: -o-linear-gradient(-90deg, #89d8ca, #9face6);
+	background: -moz-linear-gradient(-90deg, #89d8ca, #9face6);
+	background: linear-gradient(-90deg, #89d8ca, #9face6);
 }
 
 .navbar .navbar-brand{
