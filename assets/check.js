@@ -32,6 +32,10 @@ function checkToken(){
 			if(!result.active){ // Если не валиден - удаляем токен и перенаправляем на страницу логина
 				localStorage.removeItem("token");
 				location.href = "/login";
+			} else if($(".preloader").height()){ // Если токен валиден - удаляем прелоадер
+				$(".preloader").fadeOut(300, function(){
+					$(this).remove();
+				});
 			}
 		}
 	});
