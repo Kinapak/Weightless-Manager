@@ -6,7 +6,7 @@
 		config = json;
 	});
 	
-	// Запрос токена по введенным учетным данным
+	// Запрос токенов по введенным учетным данным
 	$("#login-form").on("submit", function(e){
 		e.preventDefault();
 		
@@ -21,11 +21,13 @@
 				"password": btoa($("[name='pass']").val())
 			},
 			success: function(result){
-				result = JSON.parse(result.response);
+				let user = $.parseJSON(result.response.user_token);
+				let IAM = $.parseJSON(result.response.iam_token);
 				
-				// Если пришел токен, то запоминаем его
-				if(result.access_token){
-					localStorage.setItem("token", result.access_token);
+				// Если пришли токены, то запоминаем их
+				if(user.access_token && IAM.access_token){
+					localStorage.setItem("user_token", user.access_token);
+					localStorage.setItem("IAM_token", IAM.access_token);
 					location.href = "/";
 				}
 			}

@@ -11,7 +11,7 @@ $.getJSON("/config.json", function(json){
 
 // Функция проверки сохраненного токена на валидность
 function checkToken(){
-	let token = localStorage.getItem("token");
+	let token = localStorage.getItem("user_token");
 	
 	// Если нет токена - переход на страницу логина
 	if(token == undefined){
@@ -30,7 +30,7 @@ function checkToken(){
 			result = JSON.parse(result.response);
 			
 			if(!result.active){ // Если не валиден - удаляем токен и перенаправляем на страницу логина
-				localStorage.removeItem("token");
+				localStorage.removeItem("user_token");
 				location.href = "/login";
 			} else if($(".preloader").height()){ // Если токен валиден - удаляем прелоадер
 				$(".preloader").fadeOut(300, function(){

@@ -1,5 +1,6 @@
 <?php
 	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор AppID
+	$api_key = "cdWVjwFtfWMjlWxobo8DIlSNdkemv-cb5pJnqlnz9tnK"; // API-ключ для второго токена
 	
 	// Параметры для базовой header-авторизации всех приложений
 	$client_id = "c956120d-0f5f-49dc-9586-e78d31699e00";
@@ -7,7 +8,7 @@
 	
 	// Получение токена пользователя для входа и использования приложения
 	function getToken(array $args): array{
-		global $client_id, $secret, $tenant_id;
+		global $client_id, $secret, $tenant_id, $api_key;
 		$username = base64_decode($args["username"]);
 		$password = base64_decode($args["password"]);
 		
@@ -26,7 +27,23 @@
 		 ),
 		 CURLOPT_POSTFIELDS => "grant_type=password&username=".$username."&password=".$password
 		));
-		$response = curl_exec($curl);
+		$response["user_token"] = curl_exec($curl);
+		curl_close($curl);
+		
+		// Запрос на получение IAM-токена
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => "https://iam.cloud.ibm.com/identity/token",
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_POST => true,
+		 CURLOPT_HTTPHEADER => array(
+		  "Content-Type: application/x-www-form-urlencoded",
+		  "Accept: application/json"
+		 ),
+		 CURLOPT_POSTFIELDS => "grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=".$api_key
+		));
+		$response["iam_token"] = curl_exec($curl);
 		curl_close($curl);
 		
 		return ["response" => $response];
