@@ -16,19 +16,19 @@ $(document).ready(function(){
 		} else $(this).find("[name='type']").removeClass("danger");
 		
 		let data = form.serialize();
-		data += "&token=" + localStorage.getItem("token");
+		data += "&user-token=" + localStorage.getItem("user_token") + "&iam-token=" + localStorage.getItem("IAM_token");
 		
 		$.ajax({
 			url: config.api_db_management + "/add",
 			type: "POST",
 			dataType: "json",
 			headers: {
-				"Authorization": "Bearer " + localStorage.getItem("token")
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
 			},
 			data: data,
 			success: function(result){
 				// Сброс формы и кнопки
-				//form.trigger("reset");
+				form.trigger("reset");
 				form.find("[type='button']").html("Добавить").attr("type", "submit");
 				
 				//todo сообщение об успешном добавлении бд

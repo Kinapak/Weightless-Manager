@@ -1,9 +1,10 @@
 <?php
 	$type_list = array("mysql");
+	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор AppID
 	
 	// Добавление новой базы данных
 	function addDB(array $args): array{
-		global $type_list, $public_key;
+		global $type_list, $public_key, $tenant_id;
 		
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
@@ -20,36 +21,35 @@
 		 "db"
 		];
 		
-		// Проверка на существование введенного имени БД
+		// Нахождение основного email пользователя, который является документом в базе данных
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/api/v1/attributes/databases",
+		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/oauth/v4/".$tenant_id."/userinfo",
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_CUSTOMREQUEST => "POST",
+		 CURLOPT_HTTPHEADER => array(
+		  "Authorization: Bearer ".$args["user-token"]
+		 )
+		));
+		$email = json_decode(curl_exec($curl), true);
+		curl_close($curl);
+		
+		// Проверка на существование введенного названия БД
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/user_db/".$email["email"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_TIMEOUT => 60,
 		 CURLOPT_HTTPHEADER => array(
-		  "Authorization: Bearer ".$args["token"]
+		  "Authorization: Bearer ".$args["iam-token"],
+		  "Content-Type: application/json"
 		 )
 		));
-		$databases = curl_exec($curl);
+		$databases = json_decode(curl_exec($curl), true);
 		curl_close($curl);
-		
-		/* Запрос возвращает строку, которая плохо декодируется
-		 * Поэтому необходимо выполнить ряд преобразований для избавления от массива
-		 * Затем необходимо разложить строку с объектами на массив для дальнейшего перебора */
-		$databases = json_decode($databases, true);
-		$databases["databases"] = str_replace("[", "", $databases["databases"]);
-		$databases["databases"] = str_replace("]", "", $databases["databases"]);
-		$databases = explode("},{", $databases["databases"]);
-		
-		foreach($databases as $db){
-			/* Т.к. разделитель удаляется, элементам массива необходимо заново прописать { и } в нужных местах
-			 * Затем уже можно производить декодирование и сравнение имен */
-			if(strpos($db, "{") === false) $db = "{".$db;
-			if(strpos($db, "}") === false) $db = $db."}";
-			$db = json_decode($db, true);
-			if($db["name"] == $data["name"]) return ["response" => ["error" => "Данное название для базы данных уже занято"]];
-			else $put[] = $db;
-		}
+		if($databases["databases"][$data["name"]])
+			return ["response" => ["error" => "Данное название для базы данных уже занято"]];
 		
 		// Проверяем тип базы данных по белому списку
 		if(array_search($data["type"], $type_list) === false)
@@ -61,20 +61,19 @@
 			$data[$field] = chunk_split(base64_encode($encrypted));
 		}
 		
-		// Добавление новой БД в атрибуты
-		$put[] = $data;
-		$put = json_encode($put);
+		// Добавление новой БД в документ пользователя к уже имеющимся
+		$databases["databases"][$data["name"]] = $data;
+		$put = json_encode(["_rev" => $databases["_rev"], "databases" => $databases["databases"]]);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/api/v1/attributes/databases",
+		 CURLOPT_URL => "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/user_db/".$email["email"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_FOLLOWLOCATION => 1,
 		 CURLOPT_TIMEOUT => 60,
 		 CURLOPT_CUSTOMREQUEST => "PUT",
 		 CURLOPT_POSTFIELDS => $put,
 		 CURLOPT_HTTPHEADER => array(
-		  "Authorization: Bearer ".$args["token"],
-		  "Accept: application/json",
+		  "Authorization: Bearer ".$args["iam-token"],
 		  "Content-Type: application/json"
 		 )
 		));
