@@ -1,4 +1,4 @@
-$(document).ready(function(){
+setTimeout(function(){
 	
 	// Подгрузка страниц
 	$(".tree a").click(function(e){
@@ -11,4 +11,4 @@ $(document).ready(function(){
 		$("#main-view").load("/manager/" + $(this).attr("href"));
 	});
 	
-});
+}, 500);
