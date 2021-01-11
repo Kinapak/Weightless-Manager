@@ -61,6 +61,14 @@
 		return ["response" => "Successful"];
 	}
 	
+	// Получение списка названий-идентификаторов баз данных пользователя
+	function getDBList(array $tokens): array{
+		$document = getUserDocument($tokens);
+		$document = $document["document"];
+		foreach($document["databases"] as $id => $val) $databases[$val["name"]] = $val["name"];
+		return ["databases" => $databases];
+	}
+	
 	// Получение документа пользователя из Cloudant
 	function getUserDocument(array $tokens): array{
 		global $tenant_id;

@@ -11,6 +11,11 @@ functions:
     name: database/addDB
     events:
       - http: POST database/addDB
+  getDBList:
+    handler: management.getDBList
+    name: database/getDBList
+    events:
+      - http: POST database/listDB
 
 plugins:
   - serverless-openwhisk
