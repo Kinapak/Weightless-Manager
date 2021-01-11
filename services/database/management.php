@@ -1,10 +1,11 @@
 <?php
 	$type_list = array("mysql");
 	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор AppID
+	$cloudant_url = "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/";
 	
 	// Добавление новой базы данных
 	function addDB(array $args): array{
-		global $type_list, $public_key;
+		global $type_list, $public_key, $cloudant_url;
 		
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
@@ -44,7 +45,7 @@
 		$put = json_encode(["_rev" => $document["_rev"], "databases" => $databases]);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/user_db/".$document["_id"],
+		 CURLOPT_URL => $cloudant_url."user_db/".$document["_id"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_FOLLOWLOCATION => 1,
 		 CURLOPT_TIMEOUT => 60,
@@ -71,7 +72,7 @@
 	
 	// Получение документа пользователя из Cloudant
 	function getUserDocument(array $tokens): array{
-		global $tenant_id;
+		global $tenant_id, $cloudant_url;
 		
 		// Нахождение основного email пользователя, который является документом в базе данных
 		$curl = curl_init();
@@ -90,7 +91,7 @@
 		// Получение документа пользователя
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/user_db/".$email["email"],
+		 CURLOPT_URL => $cloudant_url."user_db/".$email["email"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_TIMEOUT => 60,
 		 CURLOPT_HTTPHEADER => array(
