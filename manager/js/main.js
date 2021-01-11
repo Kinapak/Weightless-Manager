@@ -46,6 +46,11 @@ setTimeout(function(){
 		checkToken();
 		
 		$("#main-view").load("/manager/" + $(this).attr("href"));
+		
+		$(".ripple a").removeClass("active");
+		$(this).closest(".ripple").children("a").addClass("active");
+		$(".tree li").removeClass("active");
+		$(this).parent().addClass("active");
 	});
 	
 }, 500);
