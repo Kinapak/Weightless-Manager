@@ -3,7 +3,7 @@
 	
 	// Добавление новой базы данных
 	function addDB(array $args): array{
-		global $cloudant_url, $db_type_list, $public_key;
+		global $cloudant_url, $db_type_list;
 		
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
@@ -13,11 +13,6 @@
 		 "user" => strval(trim($args["user"])),
 		 "password" => strval(trim($args["password"])),
 		 "db" => strval(trim($args["db"]))
-		];
-		$to_encrypt = [ // Поля для шифрования
-		 "user",
-		 "password",
-		 "db"
 		];
 		
 		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
@@ -31,12 +26,6 @@
 		// Проверяем тип базы данных по белому списку
 		if(array_search($data["type"], $db_type_list) === false)
 			return ["response" => ["error" => "Данный тип базы данных не поддерживается"]];
-		
-		// Шифрование чувствительных полей
-		foreach($to_encrypt as $field){
-			openssl_public_encrypt($data[$field], $encrypted, openssl_get_publickey($public_key));
-			$data[$field] = chunk_split(base64_encode($encrypted));
-		}
 		
 		// Добавление новой БД в документ пользователя к уже имеющимся
 		$databases[$data["name"]] = $data;
@@ -66,6 +55,11 @@
 		$document = $document["document"];
 		foreach($document["databases"] as $id => $val) $databases[$val["name"]] = $val["name"];
 		return ["databases" => $databases];
+	}
+	
+	function getPublicKey(): array{
+		global $public_key;
+		return ["public_key" => $public_key];
 	}
 	
 	// Получение документа пользователя из Cloudant
