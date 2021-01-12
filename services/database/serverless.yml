@@ -16,6 +16,11 @@ functions:
     name: database/getDBList
     events:
       - http: POST database/listDB
+  getPublicKey:
+    handler: management.getPublicKey
+    name: database/getPublicKey
+    events:
+      - http: POST database/publicKey
 
 plugins:
   - serverless-openwhisk

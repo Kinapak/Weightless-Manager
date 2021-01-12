@@ -1,11 +1,9 @@
 <?php
-	$type_list = array("mysql");
-	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор AppID
-	$cloudant_url = "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/";
+	require_once("_config.php");
 	
 	// Добавление новой базы данных
 	function addDB(array $args): array{
-		global $type_list, $public_key, $cloudant_url;
+		global $cloudant_url, $db_type_list, $public_key;
 		
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
@@ -31,7 +29,7 @@
 			return ["response" => ["error" => "Данное название для базы данных уже занято"]];
 		
 		// Проверяем тип базы данных по белому списку
-		if(array_search($data["type"], $type_list) === false)
+		if(array_search($data["type"], $db_type_list) === false)
 			return ["response" => ["error" => "Данный тип базы данных не поддерживается"]];
 		
 		// Шифрование чувствительных полей
