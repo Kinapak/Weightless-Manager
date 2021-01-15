@@ -55,12 +55,13 @@ $(document).ready(function(){
 						form.trigger("reset");
 						form.find("[type='button']").html("Добавить").attr("type", "submit");
 						
-						//todo сообщение об успешном добавлении бд
-						console.log(result);
+						wmAlert("База данных успешно добавлена", "success");
+						dbList();
 					},
 					error: function(result){
 						// Если ошибка, то сброс кнопки и вывод логов
 						form.find("[type='button']").html("Добавить").attr("type", "submit");
+						wmAlert("Ошибка! См. логи. ", "fail");
 						console.log(result);
 					}
 				});
@@ -68,6 +69,7 @@ $(document).ready(function(){
 			error: function(result){
 				// Если ошибка, то сброс кнопки и вывод логов
 				form.find("[type='button']").html("Добавить").attr("type", "submit");
+				wmAlert("Ошибка! См. логи. ", "fail");
 				console.log(result);
 			}
 		});
