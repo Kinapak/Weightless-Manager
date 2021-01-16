@@ -4,6 +4,8 @@ $(document).ready(function(){
 	$("#add-database").on("submit", function(e){
 		e.preventDefault();
 		
+		checkToken(); // Проверка авторизации
+		
 		let form = $(this), public_key;
 		let encryption = new JSEncrypt();
 		
