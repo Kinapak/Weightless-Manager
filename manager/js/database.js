@@ -53,12 +53,16 @@ $(document).ready(function(){
 						"iam-token": localStorage.getItem("IAM_token")
 					},
 					success: function(result){
-						// Сброс формы и кнопки
-						form.trigger("reset");
-						form.find("[type='button']").html("Добавить").attr("type", "submit");
+						// Если успешно, то сброс формы и вывод всего остального, иначе вывод ошибки
+						if(!result.response.error){
+							wmAlert("База данных успешно добавлена", "success");
+							form.trigger("reset");
+							dbList();
+							settings();
+						} else wmAlert(result.response.error, "fail");
 						
-						wmAlert("База данных успешно добавлена", "success");
-						dbList();
+						// Сброс кнопки в любом случае
+						form.find("[type='button']").html("Добавить").attr("type", "submit");
 					},
 					error: function(result){
 						// Если ошибка, то сброс кнопки и вывод логов
