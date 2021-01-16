@@ -11,11 +11,21 @@ functions:
     name: database/addDB
     events:
       - http: POST database/addDB
+  deleteDB:
+    handler: management.deleteDB
+    name: database/deleteDB
+    events:
+      - http: POST database/deleteDB
   getDBList:
     handler: management.getDBList
     name: database/getDBList
     events:
       - http: POST database/listDB
+  getDBSettings:
+    handler: management.getDBSettings
+    name: database/getDBSettings
+    events:
+      - http: POST database/listDBSettings
   getPublicKey:
     handler: management.getPublicKey
     name: database/getPublicKey

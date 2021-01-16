@@ -17,7 +17,7 @@ function dbList(){
 			$databases.html("");
 			
 			if(!result.databases){
-				$databases.append('<li><a href="views/addDatabase.html">Добавить базу данных</a></li>');
+				$databases.append('<li><a href="views/dbManagement.html">Добавить базу данных</a></li>');
 				return false;
 			}
 			

@@ -49,6 +49,39 @@
 		return ["response" => "Successful"];
 	}
 	
+	function deleteDB(array $args): array{
+		global $cloudant_url;
+		
+		// Получение пользовательского документа и баз данных
+		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
+		$document = $document["document"];
+		$databases = $document["databases"];
+		
+		$name = strval(trim($args["name"])); // Имя базы данных для удаления
+		
+		unset($databases[$name]); // Удаление БД из списка
+		
+		// Обновление документа
+		$upd = json_encode(["_rev" => $document["_rev"], "databases" => $databases]);
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => $cloudant_url."user_db/".$document["_id"],
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_FOLLOWLOCATION => 1,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_CUSTOMREQUEST => "PUT",
+		 CURLOPT_POSTFIELDS => $upd,
+		 CURLOPT_HTTPHEADER => array(
+		  "Authorization: Bearer ".$args["iam-token"],
+		  "Content-Type: application/json"
+		 )
+		));
+		curl_exec($curl);
+		curl_close($curl);
+		
+		return ["response" => "Successful"];
+	}
+	
 	// Получение списка названий-идентификаторов баз данных пользователя
 	function getDBList(array $tokens): array{
 		$document = getUserDocument($tokens);
@@ -57,6 +90,28 @@
 		return ["databases" => $databases];
 	}
 	
+	// Получение списка баз данных пользователя для страницы настроек
+	function getDBSettings(array $tokens): array{
+		global $private_key, $to_decrypt;
+		
+		$document = getUserDocument($tokens);
+		$document = $document["document"];
+		
+		foreach($document["databases"] as $id => $val){
+			// Расшифровка полей для подстановки в форму
+			foreach($to_decrypt as $field){
+				if(!$val[$field]) continue;
+				openssl_private_decrypt(base64_decode($val[$field]), $decrypted, openssl_get_privatekey($private_key));
+				$val[$field] = $decrypted;
+			}
+			
+			$databases[$id] = $val;
+		}
+		
+		return ["databases" => $databases];
+	}
+	
+	// Получение публичного ключа для шифрования необходимых полей на клиенте
 	function getPublicKey(): array{
 		global $public_key;
 		return ["public_key" => $public_key];
