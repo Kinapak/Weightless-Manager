@@ -14,14 +14,19 @@ function dbList(){
 			"iam-token": localStorage.getItem("IAM_token")
 		},
 		success: function(result){
-			if(!result.databases) return false;
-			
 			$databases.html("");
+			
+			if(!result.databases){
+				$databases.append('<li><a href="views/addDatabase.html">Добавить базу данных</a></li>');
+				return false;
+			}
+			
 			$.each(result.databases, function(id, val){
 				$databases.append("<li><a href='views/database.html'>" + id + "</a></li>");
 			});
 			
-			$databases.parent().children(".tree-toggle").trigger("click");
+			if($databases.parent().children(".tree").css("display") == "none")
+				$databases.parent().children(".tree-toggle").trigger("click");
 		},
 		error: function(result){
 			// Если ошибка, то вывод ошибки и логов
