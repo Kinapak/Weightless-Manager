@@ -44,27 +44,30 @@ setTimeout(function(){
 
 // Вывод сообщения с автоматическим скрытием на страницу
 function wmAlert(message, type){
-	let icon = "bell", duration = 500;
+	let icon = "bell", duration = 500, timeout = 3000; // Иконка, скорость анимации и таймаут
 	
-	$("#wm-alert").addClass(type);
+	$("#wm-alert").attr("class", "").addClass(type); // Сброс классов и установка класса по типу
 	
+	// Добавление иконки
 	if(type == "success") icon = "check-circle";
 	if(type == "fail") icon = "close";
 	$("#wm-alert .fa").addClass("fa-" + icon);
 	
 	$("#wm-alert p").text(message);
 	
+	// Отображение
 	$("#wm-alert").css("display", "block").animate({
 		right: 10
 	}, duration);
 	
+	// Скрытие через указанное время
 	setTimeout(function(){
 		$("#wm-alert").animate({
 			right: -300
 		}, duration, "swing", function(){
 			$("#wm-alert").css("display", "none");
 		});
-	}, 3000);
+	}, timeout);
 }
 
 // Подгрузка страниц
