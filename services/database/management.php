@@ -116,38 +116,3 @@
 		global $public_key;
 		return ["public_key" => $public_key];
 	}
-	
-	// Получение документа пользователя из Cloudant
-	function getUserDocument(array $tokens): array{
-		global $tenant_id, $cloudant_url;
-		
-		// Нахождение основного email пользователя, который является документом в базе данных
-		$curl = curl_init();
-		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/oauth/v4/".$tenant_id."/userinfo",
-		 CURLOPT_RETURNTRANSFER => true,
-		 CURLOPT_TIMEOUT => 60,
-		 CURLOPT_CUSTOMREQUEST => "POST",
-		 CURLOPT_HTTPHEADER => array(
-		  "Authorization: Bearer ".$tokens["user-token"]
-		 )
-		));
-		$email = json_decode(curl_exec($curl), true);
-		curl_close($curl);
-		
-		// Получение документа пользователя
-		$curl = curl_init();
-		curl_setopt_array($curl, array(
-		 CURLOPT_URL => $cloudant_url."user_db/".$email["email"],
-		 CURLOPT_RETURNTRANSFER => true,
-		 CURLOPT_TIMEOUT => 60,
-		 CURLOPT_HTTPHEADER => array(
-		  "Authorization: Bearer ".$tokens["iam-token"],
-		  "Content-Type: application/json"
-		 )
-		));
-		$document = json_decode(curl_exec($curl), true);
-		curl_close($curl);
-		
-		return ["document" => $document];
-	}
