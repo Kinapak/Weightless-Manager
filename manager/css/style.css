@@ -2243,14 +2243,14 @@ ul li a:focus{
 	z-index: 9999;
 	width: 300px;
 	padding: 15px;
-	border-left: 2px solid #c1b8b8;
+	border-left: 2px solid rgba(107, 168, 184, 0.8);
 	background-color: #fff;
 	box-shadow: 0 0 10px -3px rgba(0, 0, 0, 0.3);
 }
 
 #wm-alert .fa{
 	float: left;
-	color: #c1b8b8;
+	color: rgba(107, 168, 184, 0.8);
 	margin: 2px 10px 0 0;
 }
 
@@ -2462,7 +2462,7 @@ ul li a:focus{
 }
 
 #left-menu .sub-left-menu .active{
-	border-left: 4px solid #c1b8b8;
+	border-left: 4px solid rgba(107, 168, 184, 0.8);
 }
 
 #left-menu .sub-left-menu .active{
