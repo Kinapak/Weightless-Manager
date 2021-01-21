@@ -6730,6 +6730,11 @@ ul li a:focus{
 	animation: inputHighlighter 0.3s ease;
 }
 
+.responsive-table td:hover{
+	background-color: #efefef;
+	cursor: pointer;
+}
+
 @keyframes rippleForm{
 	from{
 		-webkit-opacity: 0.8;

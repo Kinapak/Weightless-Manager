@@ -31,6 +31,11 @@ functions:
     name: database/getPublicKey
     events:
       - http: POST database/publicKey
+  getDBTables:
+    handler: action.getDBTables
+    name: database/getDBTables
+    events:
+      - http: POST database/tables
 
 plugins:
   - serverless-openwhisk
