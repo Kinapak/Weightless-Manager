@@ -73,7 +73,7 @@ p{
 	font-size: 14px;
 	line-height: 1.7;
 	color: #666;
-	margin: 0px;
+	margin: -1rem 0 1rem 0;
 }
 
 ul, li{
@@ -436,40 +436,8 @@ iframe{
 	position: relative;
 }
 
-.alert-validate::before{
-	content: attr(data-validate);
-	position: absolute;
-	max-width: 70%;
-	background-color: white;
-	border: 1px solid #c80000;
-	border-radius: 13px;
-	padding: 4px 25px 4px 10px;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
-	transform: translateY(-50%);
-	right: 8px;
-	pointer-events: none;
-	
-	font-family: Comfortaa;
-	color: #c80000;
-	font-size: 13px;
-	line-height: 1.4;
-	text-align: left;
-	
-	visibility: hidden;
-	opacity: 0;
-	
-	-webkit-transition: opacity 0.4s;
-	-o-transition: opacity 0.4s;
-	-moz-transition: opacity 0.4s;
-	transition: opacity 0.4s;
-}
-
 .alert-validate::after{
-	content: "\f06a";
+	content: "\f057";
 	font-family: FontAwesome;
 	display: block;
 	position: absolute;
@@ -484,9 +452,8 @@ iframe{
 	right: 13px;
 }
 
-.alert-validate:hover:before{
-	visibility: visible;
-	opacity: 1;
+.error-field{
+	border: 1px solid #da2b2b;
 }
 
 @media (max-width: 992px){
