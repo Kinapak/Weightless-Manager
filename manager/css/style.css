@@ -2202,7 +2202,8 @@ ul li a:focus{
 	background: -webkit-linear-gradient(-90deg, #89d8ca, #9face6);
 	background: -o-linear-gradient(-90deg, #89d8ca, #9face6);
 	background: -moz-linear-gradient(-90deg, #89d8ca, #9face6);
-	background: linear-gradient(-90deg, #89d8ca, #9face6);
+	background: linear-gradient(-90deg, rgba(137, 216, 202, 0.8), rgba(159, 172, 230, 0.8));
+	backdrop-filter: blur(3px);
 }
 
 .navbar .navbar-brand{
