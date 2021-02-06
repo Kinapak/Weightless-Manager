@@ -36,6 +36,13 @@ functions:
     name: database/getDBTables
     events:
       - http: POST database/tables
+  getTable:
+    handler: action.getTable
+    name: database/getTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST database/table
 
 plugins:
   - serverless-openwhisk

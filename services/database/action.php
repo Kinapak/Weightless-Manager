@@ -16,6 +16,20 @@
 		return ["tables" => $tables];
 	}
 	
+	// Получение данных в таблице
+	function getTable(array $args): array{
+		// Инициализация базы данных
+		$connection = connect($args);
+		$link = $connection["connection"];
+		
+		// Получение части данных по переданному лимиту в таблице и выдача ответа
+		$res = mysqli_query($link, "SELECT * FROM ".$args["table"]." limit ".$args["limit"]);
+		if(!mysqli_num_rows($res) and $args["limit"] == "0, 50") $data["empty"] = [["Таблица пуста."]];
+		else while($row = mysqli_fetch_assoc($res)) $data[] = $row;
+		
+		return ["data" => $data];
+	}
+	
 	// Подключение к базе данных MySQL
 	function connect(array $args): array{
 		global $private_key, $to_decrypt;
@@ -33,6 +47,8 @@
 		// Подключение и проверка корректности подключения
 		$connect = mysqli_connect($db["remote"], $db["user"], $db["password"], $db["db"], $db["port"]);
 		if(!$connect) return ["response" => ["error" => "Ошибка подключения"]];
+		
+		mysqli_set_charset($connect, "UTF8");
 		
 		return ["connection" => $connect];
 	}
