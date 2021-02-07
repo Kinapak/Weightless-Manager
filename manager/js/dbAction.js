@@ -24,7 +24,10 @@ $(document).ready(function(){
 				.append("<thead><tr><th>Таблицы</th></tr></thead>")
 				.DataTable({
 					data: result.tables.empty || result.tables,
-					paging: false
+					paging: false,
+					language: {
+						url: "/manager/js/plugins/dataTables.russian.json"
+					}
 				});
 			$('#db-view tbody').attr("data-type", "tables");
 			
@@ -77,7 +80,10 @@ $(document).ready(function(){
 				// Инициализация новой таблицы с колонками
 				dt = $('#db-view').DataTable({
 					columns: cols,
-					pageLength: 50
+					pageLength: 50,
+					language: {
+						url: "/manager/js/plugins/dataTables.russian.json"
+					}
 				});
 				
 				// Добавление полученных строк с данными
@@ -102,7 +108,7 @@ $(document).ready(function(){
 							"iam-token": localStorage.getItem("IAM_token")
 						},
 						success: function(result){
-							// Добавление полученных строк с данными
+							// Добавление полученных строк с данными, запрос следующих, пока не будет пустого результата
 							if(result.data){
 								dt.rows.add(result.data).draw();
 								next(lim + limit);
