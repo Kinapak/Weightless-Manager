@@ -19,6 +19,12 @@ $(document).ready(function(){
 			"iam-token": localStorage.getItem("IAM_token")
 		},
 		success: function(result){
+			// Вывод ошибки
+			if(result.tables.error){
+				wmAlert(result.tables.error, "fail");
+				return false;
+			}
+			
 			// Отображение шапки и данных
 			dt = $('#db-view')
 				.append("<thead><tr><th>Таблицы</th></tr></thead>")
@@ -56,11 +62,18 @@ $(document).ready(function(){
 			data: {
 				"table": table,
 				"db": current_db,
-				"limit": "0, " + limit,
+				"limit_first": 0,
+				"limit_second": limit,
 				"user-token": localStorage.getItem("user_token"),
 				"iam-token": localStorage.getItem("IAM_token")
 			},
 			success: function(result){
+				// Вывод ошибки
+				if(result.data.error){
+					wmAlert(result.data.error, "fail");
+					return false;
+				}
+				
 				$("#db-name").append(" > " + table); // Добавление название таблицы к заголовку
 				
 				$("#db-loading").css("display", "none");
@@ -103,7 +116,8 @@ $(document).ready(function(){
 						data: {
 							"table": table,
 							"db": current_db,
-							"limit": lim + ", " + limit,
+							"limit_first": lim,
+							"limit_second": limit,
 							"user-token": localStorage.getItem("user_token"),
 							"iam-token": localStorage.getItem("IAM_token")
 						},
