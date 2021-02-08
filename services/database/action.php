@@ -71,8 +71,13 @@
 		
 		// Если есть аргументы, форматируем строку. В противном случае просто устраняем пробелы
 		if(count($query_args) > 0){
-			foreach($query_args as $key => $arg) // Обработка аргументов
+			foreach($query_args as $key => $arg){ // Обработка аргументов и уязвимостей
 				$query_args[$key] = mysqli_real_escape_string($link, $arg);
+				$query_args[$key] = preg_replace("/script/i", "", $arg);
+				$query_args[$key] = preg_replace("/\w*((\%27)|(\'))((\%6F)|o|(\%4F))((\%72)|r|(\%52))/ix", "", $arg);
+				$query_args[$key] = strip_tags($arg);
+				$query_args[$key] = htmlentities($arg, ENT_QUOTES);
+			}
 			$sql = vsprintf(trim($sql), $query_args);
 		} else $sql = trim($sql);
 		
