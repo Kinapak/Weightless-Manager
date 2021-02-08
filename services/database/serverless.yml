@@ -43,6 +43,13 @@ functions:
     timeout: 600
     events:
       - http: POST database/table
+  tableUpdate:
+    handler: action.tableUpdate
+    name: database/tableUpdate
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST database/update
 
 plugins:
   - serverless-openwhisk

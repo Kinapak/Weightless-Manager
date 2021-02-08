@@ -24,9 +24,38 @@
 		);
 		if(!$res) $data["error"] = "ОШИБКА: Некорректный запрос!";
 		if(!mysqli_num_rows($res) and $args["limit_first"] == 0) $data["empty"] = [["Таблица пуста."]];
-		else while($row = mysqli_fetch_assoc($res)) $data[] = $row;
+		else{
+			// Получение первичного ключа, если есть
+			$primarysel = query($args, "SHOW INDEX FROM `".$args["table"]."` WHERE Key_name = %s", ["PRIMARY"]);
+			$primary = mysqli_fetch_assoc($primarysel);
+			
+			// Обработка полученных данных
+			while($row = mysqli_fetch_assoc($res)) $data[] = $row;
+		}
 		
-		return ["data" => $data];
+		return ["data" => $data, "primary_field" => $primary["Column_name"]];
+	}
+	
+	// Операция обновления в таблице БД
+	function tableUpdate(array $args): array{
+		// Обработка ошибок
+		if(
+		 !strlen(trim($args["table"])) or
+		 !strlen(trim($args["changed_field"])) or
+		 !strlen(trim($args["changed_value"])) or
+		 !strlen(trim($args["primary_field"])) or
+		 !strlen(trim($args["primary_value"]))
+		) return ["response" => ["error" => "ОШИБКА: Некорректный запрос!"]];
+		
+		// Строка запроса будет иметь вид: UPDATE `table` SET `field`=%s ...
+		$sql = "UPDATE `".$args["table"]."` SET";
+		$sql .= " `".trim($args["changed_field"])."`=%s";
+		$sql .= " WHERE ".trim($args["primary_field"])."=%s"; // Добавление условия с плейсхолдерами к строке запроса
+		
+		// Конечный вид строки запроса: UPDATE `table` SET `field`=%s WHERE field1=%s
+		$res = query($args, $sql, [$args["changed_value"], $args["primary_value"]]);
+		
+		return ["response" => $res === true ? $res : ["error" => $res]];
 	}
 	
 	// Запрос к базе данных с плейсхолдерами
@@ -51,7 +80,8 @@
 		
 		$result = mysqli_query($link, $sql);
 		
-		return $result;
+		if(!mysqli_error($link)) return $result;
+		else return mysqli_error($link);
 	}
 	
 	// Подключение к базе данных MySQL

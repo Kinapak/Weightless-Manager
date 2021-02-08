@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	
 	let current_db = $("#databases").find("li.active").text(); // Текущая база данных
+	let current_table; // Текущая таблица
 	let dt; // Экземпляр таблицы для DataTable
 	
 	$("#db-name").text(current_db); // Установка названия текущей БД в заголовке
@@ -35,6 +36,7 @@ $(document).ready(function(){
 						url: "/manager/js/plugins/dataTables.russian.json"
 					}
 				});
+			
 			$('#db-view tbody').attr("data-type", "tables");
 			
 			$("#db-loading").css("display", "none");
@@ -43,7 +45,7 @@ $(document).ready(function(){
 	
 	// Просмотр таблицы
 	$("#db-view").on("click", "tbody[data-type='tables'] td", function(){
-		let table = $(this).text().trim(); // Название таблицы для выборки из БД
+		current_table = $(this).text().trim(); // Название таблицы для выборки из БД
 		
 		// Удаление текущей таблицы
 		dt.destroy();
@@ -60,7 +62,7 @@ $(document).ready(function(){
 				"Authorization": "Bearer " + localStorage.getItem("user_token")
 			},
 			data: {
-				"table": table,
+				"table": current_table,
 				"db": current_db,
 				"limit_first": 0,
 				"limit_second": limit,
@@ -74,7 +76,7 @@ $(document).ready(function(){
 					return false;
 				}
 				
-				$("#db-name").append(" > " + table); // Добавление название таблицы к заголовку
+				$("#db-name").append(" > " + current_table); // Добавление название таблицы к заголовку
 				
 				$("#db-loading").css("display", "none");
 				
@@ -104,6 +106,18 @@ $(document).ready(function(){
 				
 				$('#db-view tbody').attr("data-type", "table-view");
 				
+				// Определение столбца с primary_key
+				if(result.primary_field){
+					setTimeout(function(){ // Небольшой таймаут для отрисовки заголовков полей
+						$("th").each(function(){
+							if($(this).text() == result.primary_field){
+								$(this).attr("data-primary", true);
+								return false;
+							}
+						});
+					}, 100);
+				}
+				
 				// Рекурсивная функция получения следующих частей данных из таблицы
 				function next(lim){
 					$.ajax({
@@ -114,7 +128,7 @@ $(document).ready(function(){
 							"Authorization": "Bearer " + localStorage.getItem("user_token")
 						},
 						data: {
-							"table": table,
+							"table": current_table,
 							"db": current_db,
 							"limit_first": lim,
 							"limit_second": limit,
@@ -138,6 +152,74 @@ $(document).ready(function(){
 				wmAlert("Что-то пошло не так... См. логи", "fail");
 			}
 		});
+	});
+	
+	// Обновление выбранного значения
+	$("#db-view").on("dblclick", "tbody[data-type='table-view'] td", function(){
+		// Проверка на содержание первичного ключа в таблице
+		if(!$("#db-view [data-primary]").length) return false;
+		
+		$(this).attr("contentEditable", true);
+		$(this).focus();
+		
+		// подготовка необходимых значений
+		let changed_field = $("#db-view th:eq(" + $(this).index() + ")").text();
+		let changed_value, last_value = $(this).text();
+		let primary_field = $("#db-view [data-primary]").text();
+		let primary_value = $(this).parent().find("td:eq(" + $("#db-view [data-primary]").index() + ")").text();
+		let $that = $(this);
+		
+		function update(){
+			changed_value = $that.text();
+			$that.attr("contentEditable", false);
+			
+			// Если значение не менялось, выход из функции
+			if(changed_value === last_value) return false;
+			
+			// Отправка изменений
+			$.ajax({
+				url: config.api_db_action + "/update",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"db": current_db,
+					"table": current_table,
+					"changed_field": changed_field,
+					"changed_value": changed_value,
+					"primary_field": primary_field,
+					"primary_value": primary_value,
+					"user-token": localStorage.getItem("user_token"),
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					if(result.response.error) wmAlert(result.response.error, "fail");
+				}
+			});
+		}
+		
+		// Обновление данных по нажатию клавиши enter
+		$that.keydown(function(e){
+			if(e.keyCode === 13){
+				// Если нет редактируемого поля или клик был совершен по нему, выход из функции
+				if(!$that) return false;
+				
+				update();
+				$that = null; // Устранение дублей
+			}
+		});
+		
+		// Обновление данных по клику вне блока
+		$(document).click(function(e){
+			// Если нет редактируемого поля или клик был совершен по нему, выход из функции
+			if(!$that || $that.is(e.target)) return false;
+			
+			update();
+			$that = null; // Устранение дублей
+		});
+		
 	});
 	
 });
