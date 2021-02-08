@@ -116,7 +116,7 @@ $(document).ready(function(){
 							}
 						});
 					}, 100);
-				}
+				} else wmAlert("Таблица не содержит уникального столбца. Обновление ячеек невозможно.");
 				
 				// Рекурсивная функция получения следующих частей данных из таблицы
 				function next(lim){
@@ -162,7 +162,7 @@ $(document).ready(function(){
 		$(this).attr("contentEditable", true);
 		$(this).focus();
 		
-		// подготовка необходимых значений
+		// Подготовка необходимых значений
 		let changed_field = $("#db-view th:eq(" + $(this).index() + ")").text();
 		let changed_value, last_value = $(this).text();
 		let primary_field = $("#db-view [data-primary]").text();
