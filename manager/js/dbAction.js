@@ -3,8 +3,7 @@ $(document).ready(function(){
 	let current_db = $("#databases").find("li.active").text(); // Текущая база данных
 	let current_table; // Текущая таблица
 	let dt; // Экземпляр таблицы для DataTable
-	
-	$("#db-name").text(current_db); // Установка названия текущей БД в заголовке
+	let viewDB; // Текущее представление таблиц в базе данных
 	
 	// Отображение таблиц базы данных при загрузке страницы
 	$.ajax({
@@ -26,18 +25,32 @@ $(document).ready(function(){
 				return false;
 			}
 			
-			// Отображение шапки и данных
-			dt = $('#db-view')
-				.append("<thead><tr><th>Таблицы</th></tr></thead>")
-				.DataTable({
-					data: result.tables.empty || result.tables,
-					paging: false,
-					language: {
-						url: "/manager/js/plugins/dataTables.russian.json"
-					}
-				});
+			// Выгрузка результатов в таблицу с возможностью повторного использования
+			viewDB = function(){
+				// Если уже инициализирован экземпляр таблицы, необходимо его удалить
+				if(dt){
+					dt.destroy();
+					$('#db-view').html("");
+				}
+				
+				// Установка названия текущей БД в заголовке
+				$("#db-name").html("<span>" + current_db + "</span>");
+				
+				// Отображение шапки и данных
+				dt = $('#db-view')
+					.append("<thead><tr><th>Таблицы</th></tr></thead>")
+					.DataTable({
+						data: result.tables.empty || result.tables,
+						paging: false,
+						language: {
+							url: "/manager/js/plugins/dataTables.russian.json"
+						}
+					});
+				
+				$('#db-view tbody').attr("data-type", "tables");
+			}
 			
-			$('#db-view tbody').attr("data-type", "tables");
+			viewDB();
 			
 			$("#db-loading").css("display", "none");
 		}
@@ -76,7 +89,11 @@ $(document).ready(function(){
 					return false;
 				}
 				
-				$("#db-name").append(" > " + current_table); // Добавление название таблицы к заголовку
+				// Добавление названия таблицы к заголовку
+				$("#db-name").append(" > " + current_table);
+				
+				// Активация хлебной крошки к базе данных
+				$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
 				
 				$("#db-loading").css("display", "none");
 				
@@ -146,6 +163,11 @@ $(document).ready(function(){
 				}
 				
 				next(limit);
+				
+				// Обработка клика по хлебной крошке
+				$("#to-db").click(function(){
+					viewDB();
+				});
 			},
 			error: function(error){
 				console.log(error);
