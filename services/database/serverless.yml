@@ -50,6 +50,13 @@ functions:
     timeout: 600
     events:
       - http: POST database/update
+  tableInsert:
+    handler: action.tableInsert
+    name: database/tableInsert
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST database/insert
 
 plugins:
   - serverless-openwhisk

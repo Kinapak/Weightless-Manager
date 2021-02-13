@@ -123,6 +123,15 @@ $(document).ready(function(){
 				
 				$('#db-view tbody').attr("data-type", "table-view");
 				
+				// Добавление кнопки вставки новых строк с таймаутом для отрисовки полей
+				setTimeout(function(){
+					$("#db-view_length").append(
+						"<span id='insert-row' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; margin-left: 15px;'>" +
+						"Вставить строку" +
+						"</span>"
+					);
+				}, 100);
+				
 				// Определение столбца с primary_key
 				if(result.primary_field){
 					setTimeout(function(){ // Небольшой таймаут для отрисовки заголовков полей
@@ -241,7 +250,73 @@ $(document).ready(function(){
 			update();
 			$that = null; // Устранение дублей
 		});
+	});
+	
+	$(".responsive-table").on("click", "#insert-row", function(){
+		// Добавление строки для новых значений над таблицей
+		$(this).closest(".row").append(
+			"<div class='col-sm-12'>" +
+			"<table id='new-row' class='table table-bordered dataTable'><tr></tr></table>" +
+			"<button id='add-row' class='btn btn-round btn-primary' style='transform: scale(0.9);'>Добавить</button>" +
+			"</div>"
+		);
 		
+		// Добавление новых ячеек с шириной, как в таблице
+		$("#db-view th").each(function(){
+			$("#new-row tr").append(
+				"<td style='width: " + $(this).css("width") + ";' contenteditable='true' data-parent='" + $(this).text() + "'></td>"
+			);
+		});
+		
+		// Сразу фокусировка на первом поле
+		$("#new-row tr td:eq(0)").focus();
+		
+		// Отправка новых данных
+		$("#new-row").parent().on("click", "#add-row", function(){
+			let $this = $(this);
+			
+			// Отображение загрузки и блокировка кнопки
+			$(this).html("<i class='fa fa-spinner fa-pulse fa-lg'></i>");
+			$(this).attr("id", "");
+			
+			// Инициализация новых значений
+			let fields = {};
+			$("#new-row tr td").each(function(){
+				fields[$(this).data("parent")] = $(this).text();
+			});
+			
+			$.ajax({
+				url: config.api_db_action + "/insert",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"db": current_db,
+					"table": current_table,
+					"fields": JSON.stringify(fields),
+					"primary_field": $("#db-view [data-primary]").text(),
+					"user-token": localStorage.getItem("user_token"),
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					// Вывод ошибки добавления
+					if(result.response.error){
+						wmAlert(result.response.error, "fail");
+						$this.html("Добавить");
+						$this.attr("id", "add-row");
+						return false;
+					}
+					
+					// Добавление новой строки к таблице
+					if(result.last_row) dt.rows.add([result.last_row]).draw();
+					else dt.rows.add([fields]).draw();
+					
+					$this.parent().remove();
+				}
+			});
+		});
 	});
 	
 });

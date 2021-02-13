@@ -1,6 +1,8 @@
 <?php
 	require_once("_config.php");
 	
+	$link = null; // Ссылка на текущий экземпляр БД
+	
 	// Получение всех таблиц в базе данных
 	function getDBTables(array $args): array{
 		// Получение всех таблиц в БД или вывод ошибки
@@ -36,6 +38,40 @@
 		return ["data" => $data, "primary_field" => $primary["Column_name"]];
 	}
 	
+	// Операция добавления значений в таблицу БД
+	function tableInsert(array $args): array{
+		global $link;
+		
+		// Обработка ошибок
+		if(!strlen(trim($args["table"])) or !count($args["fields"]))
+			return ["response" => ["error" => "ОШИБКА: Некорректный запрос!"]];
+		
+		$args["fields"] = json_decode($args["fields"], true);
+		
+		// Обработка полей и значений для добавления в базу данных
+		foreach($args["fields"] as $field => $value){
+			$fields .= "`".trim($field)."`,";
+			$values .= "'".trim($value)."',";
+		}
+		$fields = substr($fields, 0, -1);
+		$values = substr($values, 0, -1);
+		
+		$sql = "INSERT INTO `".$args["table"]."` (".$fields.") VALUES (".$values.")";
+		
+		$res = query($args, $sql);
+		
+		// Запрос последней вставленной строки, если передан ключ
+		if(strlen(trim($args["primary_field"]))){
+			$last_row_sel = query(
+			 $args,
+			 "SELECT * FROM `".$args["table"]."` WHERE ".$args["primary_field"]."='".mysqli_insert_id($link)."'"
+			);
+			$last_row = mysqli_fetch_assoc($last_row_sel);
+		}
+		
+		return ["response" => $res === true ? $res : ["error" => $res], "last_row" => $last_row ? $last_row : null];
+	}
+	
 	// Операция обновления в таблице БД
 	function tableUpdate(array $args): array{
 		// Обработка ошибок
@@ -61,6 +97,7 @@
 	// Запрос к базе данных с плейсхолдерами
 	function query(array $connect_args, $sql, $query_args = array()){
 		// Инициализация базы данных
+		global $link;
 		$link = connect($connect_args);
 		
 		// Если нет аргументов, проверяем, должны ли быть
