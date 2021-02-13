@@ -26,13 +26,10 @@
 				"password": btoa($("[name='pass']").val())
 			},
 			success: function(result){
-				let user = $.parseJSON(result.response.user_token);
-				let IAM = $.parseJSON(result.response.iam_token);
-				
-				// Если пришли токены, то запоминаем их
-				if(user.access_token && IAM.access_token){
-					localStorage.setItem("user_token", user.access_token);
-					localStorage.setItem("IAM_token", IAM.access_token);
+				// Если пришли токены, то запоминаем их и перенаправляем в приложение
+				if(result.response.user_token && result.response.iam_token){
+					localStorage.setItem("user_token", result.response.user_token);
+					localStorage.setItem("IAM_token", result.response.iam_token);
 					location.href = "/";
 				} else{ // Вывод ошибки и выделение полей
 					$("input").addClass("error-field").parent().addClass('alert-validate');

@@ -134,6 +134,10 @@
 		$document = $document["document"];
 		$db = $document["databases"][$args["db"]]; // Массив с параметрами запрашиваемой базы данных
 		
+		// Проверка области доступа
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		if($db["scope"] != $origin[1]) return ["response" => ["error" => "Ошибка подключения"]];
+		
 		// Дешифрование параметров для подключения
 		foreach($to_decrypt as $field){
 			openssl_private_decrypt(base64_decode($db[$field]), $decrypted, openssl_get_privatekey($private_key));

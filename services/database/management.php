@@ -5,6 +5,7 @@
 	function addDB(array $args): array{
 		global $cloudant_url, $db_type_list;
 		
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
 		 "type" => strval(trim($args["type"])),
@@ -12,7 +13,8 @@
 		 "port" => intval(trim($args["port"])),
 		 "user" => strval(trim($args["user"])),
 		 "password" => strval(trim($args["password"])),
-		 "db" => strval(trim($args["db"]))
+		 "db" => strval(trim($args["db"])),
+		 "scope" => $origin[1]
 		];
 		
 		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
@@ -56,10 +58,11 @@
 		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
 		$document = $document["document"];
 		$databases = $document["databases"];
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
 		
 		$name = strval(trim($args["name"])); // Имя базы данных для удаления
 		
-		unset($databases[$name]); // Удаление БД из списка
+		if($databases[$name]["scope"] == $origin[1]) unset($databases[$name]); // Удаление БД из списка
 		
 		// Обновление документа
 		$upd = json_encode(["_rev" => $document["_rev"], "databases" => $databases]);
@@ -86,7 +89,9 @@
 	function getDBList(array $tokens): array{
 		$document = getUserDocument($tokens);
 		$document = $document["document"];
-		foreach($document["databases"] as $id => $val) $databases[$val["name"]] = $val["name"];
+		$origin = explode("//", $tokens["__ow_headers"]["origin"]);
+		foreach($document["databases"] as $id => $val)
+			if($val["scope"] == $origin[1]) $databases[$val["name"]] = $val["name"];
 		return ["databases" => $databases];
 	}
 	
@@ -96,8 +101,11 @@
 		
 		$document = getUserDocument($tokens);
 		$document = $document["document"];
+		$origin = explode("//", $tokens["__ow_headers"]["origin"]);
 		
 		foreach($document["databases"] as $id => $val){
+			if($val["scope"] != $origin[1]) continue;
+			
 			// Расшифровка полей для подстановки в форму
 			foreach($to_decrypt as $field){
 				if(!$val[$field]) continue;
