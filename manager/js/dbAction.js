@@ -33,8 +33,9 @@ $(document).ready(function(){
 					$('#db-view').html("");
 				}
 				
-				// Установка названия текущей БД в заголовке
+				// Установка названия текущей БД в заголовках
 				$("#db-name").html("<span>" + current_db + "</span>");
+				$("title").text("Weightless Manager | " + current_db);
 				
 				// Отображение шапки и данных
 				dt = $('#db-view')
@@ -89,8 +90,9 @@ $(document).ready(function(){
 					return false;
 				}
 				
-				// Добавление названия таблицы к заголовку
+				// Добавление названия таблицы к заголовкам
 				$("#db-name").append(" > " + current_table);
+				$("title").append(" > " + current_table);
 				
 				// Активация хлебной крошки к базе данных
 				$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");

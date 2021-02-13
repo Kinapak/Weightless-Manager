@@ -42,7 +42,7 @@ setTimeout(function(){
 	dbList();
 	
 	// Загрузка главной страницы
-	loadView("views/index.html");
+	loadView("views/index.html", "Главная");
 }, 500);
 
 // Вывод сообщения с автоматическим скрытием на страницу
@@ -73,8 +73,8 @@ function wmAlert(message, type){
 	}, timeout);
 }
 
-// Подгрузка страниц
-function loadView(href){
+// Подгрузка страниц и заголовка вкладки
+function loadView(href, title){
 	/* Дополнительная проверка токена перед подгрузкой страниц
 	* Особенно важно, когда на странице совершаются действия, для которых нужен валидный токен */
 	checkToken();
@@ -86,13 +86,15 @@ function loadView(href){
 			wmAlert("Элемент не найден", "fail");
 		}
 	});
+	
+	$("title").text("Weightless Manager | " + title);
 }
 
 // Подгрузка страницы по клику в дереве
 $(document).on("click", ".tree a", function(e){
 	e.preventDefault();
 	
-	loadView($(this).attr("href"));
+	loadView($(this).attr("href"), $(this).text());
 	
 	$(".ripple a").removeClass("active");
 	$(this).closest(".ripple").children("a").addClass("active");
@@ -106,7 +108,7 @@ $(document).on("click", ".ripple a:eq(0)", function(e){
 	
 	if($(this).parent().find(".tree").length) return false;
 	
-	loadView($(this).attr("href"));
+	loadView($(this).attr("href"), $(this).text());
 	
 	$(".ripple a").removeClass("active");
 	$(this).closest(".ripple").children("a").addClass("active");
