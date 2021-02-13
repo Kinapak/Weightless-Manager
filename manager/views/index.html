@@ -1,0 +1,25 @@
+<div class="col-md-12 card-wrap padding-0">
+	<div class="col-md-6">
+		<div class="panel box-v1">
+			<div class="panel-heading bg-white border-none">
+				<div class="col-md-6 col-sm-6 col-xs-6 text-left padding-0">
+					<h4 class="text-left">Базы данных</h4>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-6 text-right">
+					<h4>
+						<i class="fa fa-database"></i>
+					</h4>
+				</div>
+			</div>
+			<div class="panel-body text-center">
+				<h1 id="index-db-count"></h1>
+				<p>Подключено</p>
+				<hr>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#index-db-count").text($("#databases li").length);
+</script>

@@ -40,6 +40,9 @@ function dbList(){
 
 setTimeout(function(){
 	dbList();
+	
+	// Загрузка главной страницы
+	loadView("views/index.html");
 }, 500);
 
 // Вывод сообщения с автоматическим скрытием на страницу
@@ -71,17 +74,41 @@ function wmAlert(message, type){
 }
 
 // Подгрузка страниц
-$(document).on("click", ".tree a", function(e){
-	e.preventDefault();
-	
+function loadView(href){
 	/* Дополнительная проверка токена перед подгрузкой страниц
 	* Особенно важно, когда на странице совершаются действия, для которых нужен валидный токен */
 	checkToken();
 	
-	$("#main-view").load("/manager/" + $(this).attr("href"));
+	// Подгрузка страницы. Если нет страницы, вывод 404
+	$("#main-view").load("/manager/" + href, function(response, status, xhr){
+		if(status == "error"){
+			$("#main-view").load("/manager/views/404.html");
+			wmAlert("Элемент не найден", "fail");
+		}
+	});
+}
+
+// Подгрузка страницы по клику в дереве
+$(document).on("click", ".tree a", function(e){
+	e.preventDefault();
+	
+	loadView($(this).attr("href"));
 	
 	$(".ripple a").removeClass("active");
 	$(this).closest(".ripple").children("a").addClass("active");
 	$(".tree li").removeClass("active");
 	$(this).parent().addClass("active");
+});
+
+// Подгрузка страницы без дерева
+$(document).on("click", ".ripple a:eq(0)", function(e){
+	e.preventDefault();
+	
+	if($(this).parent().find(".tree").length) return false;
+	
+	loadView($(this).attr("href"));
+	
+	$(".ripple a").removeClass("active");
+	$(this).closest(".ripple").children("a").addClass("active");
+	$(".tree li").removeClass("active");
 });
