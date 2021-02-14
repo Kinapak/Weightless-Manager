@@ -1,0 +1,6 @@
+{
+	"api_user_login": "https://d0925254.eu-gb.apigw.appdomain.cloud/user/login",
+	
+	"api_db_management": "https://d0925254.eu-gb.apigw.appdomain.cloud/database/management",
+	"api_db_action": "https://d0925254.eu-gb.apigw.appdomain.cloud/database/action"
+}
