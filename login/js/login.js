@@ -30,6 +30,7 @@
 				if(result.response.user_token && result.response.iam_token){
 					localStorage.setItem("user_token", result.response.user_token);
 					localStorage.setItem("IAM_token", result.response.iam_token);
+					localStorage.setItem("user_info", JSON.stringify(result.response.user_info));
 					location.href = "/";
 				} else{ // Вывод ошибки и выделение полей
 					$("input").addClass("error-field").parent().addClass('alert-validate');

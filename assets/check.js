@@ -13,8 +13,10 @@ $.getJSON("/config.json", function(json){
 function checkToken(){
 	let token = localStorage.getItem("user_token");
 	
-	// Если нет токена - переход на страницу логина
+	// Если нет токена - удаление остальных данных и переход на страницу логина
 	if(token == undefined){
+		localStorage.removeItem("IAM_token");
+		localStorage.removeItem("user_info");
 		location.href = "/login";
 		return false;
 	}
@@ -29,8 +31,10 @@ function checkToken(){
 		success: function(result){
 			result = JSON.parse(result.response);
 			
-			if(!result.active){ // Если не валиден - удаляем токен и перенаправляем на страницу логина
+			if(!result.active){ // Если не валиден - удаляем токены и перенаправляем на страницу логина
 				localStorage.removeItem("user_token");
+				localStorage.removeItem("IAM_token");
+				localStorage.removeItem("user_info");
 				location.href = "/login";
 			} else if($(".preloader").height()){ // Если токен валиден - удаляем прелоадер
 				$(".preloader").fadeOut(300, function(){

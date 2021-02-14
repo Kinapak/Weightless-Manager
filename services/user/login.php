@@ -112,7 +112,22 @@
 		$token = json_decode($token, true);
 		curl_close($curl);
 		
-		return ["response" => ["user_token" => $token["access_token"], "iam_token" => $iam["access_token"]]];
+		// Получение данных о пользователе
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/oauth/v4/".$tenant_id."/userinfo",
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_HTTPHEADER => array(
+		  "Content-Type: application/x-www-form-urlencoded",
+		  "Authorization: Bearer ".$token["access_token"]
+		 )
+		));
+		$info = curl_exec($curl);
+		$info = json_decode($info, true);
+		curl_close($curl);
+		
+		return ["response" => ["user_token" => $token["access_token"], "iam_token" => $iam["access_token"], "user_info" => $info]];
 	}
 	
 	// Проверка токена пользователя на валидность

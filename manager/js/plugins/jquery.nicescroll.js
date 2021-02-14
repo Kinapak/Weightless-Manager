@@ -857,7 +857,7 @@
           
 					if (cap.isie&&self.opt.disableoutline) self.win.attr("hideFocus","true");  // IE, prevent dotted rectangle on focused div
 					if (cap.iswebkit&&self.opt.disableoutline) self.win.css({"outline":"none"});
-//          if (cap.isopera&&self.opt.disableoutline) self.win.css({"outline":"0"});  // Opera to test [TODO]
+//          if (cap.isopera&&self.opt.disableoutline) self.win.css({"outline":"0"});  // Opera to test
           
         }
         

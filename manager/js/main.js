@@ -1,3 +1,8 @@
+// Информация о пользователе
+let user_info = JSON.parse(localStorage.getItem("user_info"));
+
+$(".user-name span").text(user_info.name);
+
 // Загрузка списка баз данных в меню
 function dbList(){
 	let $databases = $("#databases");
