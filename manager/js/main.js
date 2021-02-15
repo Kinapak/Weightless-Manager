@@ -1,7 +1,38 @@
-// Информация о пользователе
-let user_info = JSON.parse(localStorage.getItem("user_info"));
-
-$(".user-name span").text(user_info.name);
+setTimeout(function(){
+	// Проверка кода из IBM
+	if(params["code"]){
+		$.ajax({
+			url: config.api_user_login + "/token",
+			type: "POST",
+			dataType: "json",
+			data: {
+				"code": params["code"],
+				"app_id": config.app_id,
+				"secret": config.secret
+			},
+			success: function(result){
+				// Если пришел токен, то запоминаем его
+				if(result.response.user_token){
+					localStorage.setItem("user_token", result.response.user_token);
+					localStorage.setItem("user_info", JSON.stringify(result.response.user_info));
+					location.href = "/";
+				} else{ // Иначе вывод ошибки
+					wmAlert("Ошибка авторизации!", "fail");
+				}
+			}
+		});
+	}
+	
+	// Информация о пользователе
+	let user_info = JSON.parse(localStorage.getItem("user_info"));
+	
+	$(".user-name span").text(user_info.name);
+	
+	dbList();
+	
+	// Загрузка главной страницы
+	loadView("views/index.html", "Главная");
+}, 500);
 
 // Загрузка списка баз данных в меню
 function dbList(){
@@ -42,13 +73,6 @@ function dbList(){
 		}
 	});
 }
-
-setTimeout(function(){
-	dbList();
-	
-	// Загрузка главной страницы
-	loadView("views/index.html", "Главная");
-}, 500);
 
 // Вывод сообщения с автоматическим скрытием на страницу
 function wmAlert(message, type){
