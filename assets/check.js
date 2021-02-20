@@ -52,6 +52,7 @@ function checkToken(){
 			
 			if(!result.active){ // Если не валиден - удаляем токены и перенаправляем на страницу логина
 				localStorage.removeItem("user_token");
+				localStorage.removeItem("IAM_token");
 				localStorage.removeItem("user_info");
 				location.href = `https://eu-gb.appid.cloud.ibm.com/oauth/v4/${config.tenant}/authorization?response_type=code&client_id=${config.app_id}&redirect_uri=${encodeURI(config.domain)}&scope=openid&language=ru-RU`;
 			} else if($(".preloader").height()){ // Если токен валиден - удаляем прелоадер

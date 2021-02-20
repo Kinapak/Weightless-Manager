@@ -11,9 +11,10 @@ setTimeout(function(){
 				"secret": config.secret
 			},
 			success: function(result){
-				// Если пришел токен, то запоминаем его
+				// Если пришли токены, то запоминаем их
 				if(result.response.user_token){
 					localStorage.setItem("user_token", result.response.user_token);
+					localStorage.setItem("IAM_token", result.response.iam_token);
 					localStorage.setItem("user_info", JSON.stringify(result.response.user_info));
 					location.href = "/";
 				} else{ // Иначе вывод ошибки
