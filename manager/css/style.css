@@ -3244,13 +3244,17 @@ ul li a:focus{
 .box-v4 .panel-body{
 }
 
-.box-v4 .panel-body .box-v4-alert{
+.box-v4 .panel-body .box-v4-alert, .box-v1 .box-v4-alert{
 	width: 100%;
 	padding: 30px;
 	background-color: #f9f9f9;
 	border-top: 1px solid #e7eaec;
 	border-bottom: 1px solid #e7eaec;
 	margin-bottom: 10px;
+}
+
+.box-v1 .box-v4-alert{
+	margin-top: 15px;
 }
 
 /*start: box v-5*/

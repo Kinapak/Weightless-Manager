@@ -11,6 +11,16 @@ functions:
     name: app/addKey
     events:
       - http: POST app/addKey
+  addUser:
+    handler: management.addUser
+    name: app/addUser
+    events:
+      - http: POST app/addUser
+  removeUser:
+    handler: management.removeUser
+    name: app/removeUser
+    events:
+      - http: POST app/removeUser
 
 plugins:
   - serverless-openwhisk
