@@ -134,7 +134,7 @@
 		
 		// Получение приватного ключа из настроек приложения
 		$app = getDocument($args["iam-token"], "applications", $origin[1]);
-		$private_key = $app["document"]["private_key"];
+		$private_key = $app["document"]["keys"]["private_key"];
 		
 		// Получение базы данных из настроек
 		$document = getDocument($args["iam-token"], "app_db", $origin[1]);

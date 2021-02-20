@@ -108,7 +108,7 @@
 		$db = getDocument($token["iam-token"], "app_db", $origin[1]);
 		$db = $db["document"];
 		
-		$private_key = $app["private_key"];
+		$private_key = $app["keys"]["private_key"];
 		
 		foreach($db["databases"] as $id => $val){
 			// Расшифровка полей для подстановки в форму
@@ -128,5 +128,5 @@
 	function getPublicKey(array $args): array{
 		$header = explode("//", $args["__ow_headers"]["origin"]);
 		$app = getDocument($args["iam-token"], "applications", $header[1]);
-		return ["public_key" => $app["document"]["public_key"]];
+		return ["public_key" => $app["document"]["keys"]["public_key"]];
 	}

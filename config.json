@@ -4,6 +4,8 @@
 	"api_db_management": "https://d0925254.eu-gb.apigw.appdomain.cloud/database/management",
 	"api_db_action": "https://d0925254.eu-gb.apigw.appdomain.cloud/database/action",
 	
+	"api_app_management": "https://d0925254.eu-gb.apigw.appdomain.cloud/app/management",
+	
 	"tenant": "53cfab53-a6af-49d1-94a3-a182a24a3312",
 	"app_id": "ad05d88d-7a0b-4b58-bbf6-fd9efab6b3ed",
 	"secret": "NmY2ZDVmN2YtMGFlNi00ZDdmLWEyNGYtZmYwYzhiMTRiNmQz",

@@ -1,0 +1,16 @@
+service: app
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  addKey:
+    handler: management.addKey
+    name: app/addKey
+    events:
+      - http: POST app/addKey
+
+plugins:
+  - serverless-openwhisk
