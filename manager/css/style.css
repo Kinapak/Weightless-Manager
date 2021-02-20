@@ -2417,6 +2417,11 @@ ul li a:focus{
 	font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+#logout{
+	padding: 15px 15px 10px 10px;
+	cursor: pointer;
+}
+
 /*-----Left menu-------*/
 #left-menu{
 }

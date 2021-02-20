@@ -144,3 +144,14 @@ $(document).on("click", ".ripple a:eq(0)", function(e){
 	$(this).closest(".ripple").children("a").addClass("active");
 	$(".tree li").removeClass("active");
 });
+
+// Обработка кнопки выхода
+$(document).on("click", "#logout", function(){
+	// Удаление текущей сессии
+	localStorage.removeItem("user_token");
+	localStorage.removeItem("IAM_token");
+	localStorage.removeItem("user_info");
+	
+	// Переход на главную сайта
+	location.href="/";
+});
