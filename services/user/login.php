@@ -118,7 +118,8 @@
 		global $tenant_id;
 		
 		// Проверка на соответствие пользователя домену, с которого идет запрос
-		if(!checkScope($args["token"], $args["__ow_headers"]["origin"])) return ["response" => false];
+		$scope = checkScope($args["user-token"], $args["__ow_headers"]["origin"]);
+		if(!$scope["origin"]) return ["response" => false];
 		
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
@@ -130,12 +131,47 @@
 		  "Content-Type: application/x-www-form-urlencoded",
 		  "Authorization: Basic ".base64_encode($args["app_id"].":".$args["secret"])
 		 ),
-		 CURLOPT_POSTFIELDS => "token=".$args["token"]
+		 CURLOPT_POSTFIELDS => "token=".$args["user-token"]
 		));
-		$response = curl_exec($curl);
+		$response = json_decode(curl_exec($curl), true);
 		curl_close($curl);
 		
-		return ["response" => $response]; // Возвращает active: true || false
+		// Получение данных о пользователе
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/oauth/v4/".$tenant_id."/userinfo",
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_HTTPHEADER => array(
+		  "Content-Type: application/x-www-form-urlencoded",
+		  "Authorization: Bearer ".$args["user-token"]
+		 )
+		));
+		$info = json_decode(curl_exec($curl), true);
+		curl_close($curl);
+		
+		// Получение ролей пользователя
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/management/v4/".$tenant_id."/users/".$info["sub"]."/roles",
+		 CURLOPT_RETURNTRANSFER => true,
+		 CURLOPT_TIMEOUT => 60,
+		 CURLOPT_HTTPHEADER => array(
+		  "Authorization: Bearer ".$args["iam-token"]
+		 )
+		));
+		$roles = json_decode(curl_exec($curl), true);
+		
+		// Назначение пунктов меню настроек
+		foreach($roles["roles"] as $role){
+			if($role["name"] == "WM_".$scope["domain"]."_access_manager"){
+				$settings = ["dbManagement" => "Базы данных", "appManagement" => "Приложение"];
+				break;
+			} else $settings = [];
+		}
+		
+		// Возвращает active: true || false, а также пункты меню настроек
+		return ["response" => ["active" => $response["active"], "settings" => $settings]];
 	}
 	
 	// Проверка области, определенной в токене
