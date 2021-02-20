@@ -111,6 +111,8 @@
 		$private_key = $app["keys"]["private_key"];
 		
 		foreach($db["databases"] as $id => $val){
+			unset($val["password"]);
+			
 			// Расшифровка полей для подстановки в форму
 			foreach($to_decrypt as $field){
 				if(!$val[$field]) continue;

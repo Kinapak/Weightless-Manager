@@ -54,7 +54,7 @@ $(document).ready(function(){
 						'\t\t\t\t\t\t<label>Пользователь</label>\n' +
 						'\t\t\t\t\t</div>\n' +
 						'\t\t\t\t\t<div class="form-group form-animate-text">\n' +
-						'\t\t\t\t\t\t<input type="password" name="password" class="form-text" value="' + value.password + '" required>\n' +
+						'\t\t\t\t\t\t<input type="password" name="password" class="form-text" value="" required>\n' +
 						'\t\t\t\t\t\t<span class="bar"></span>\n' +
 						'\t\t\t\t\t\t<label>Пароль</label>\n' +
 						'\t\t\t\t\t</div>\n' +
