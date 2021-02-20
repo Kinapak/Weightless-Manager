@@ -5,7 +5,6 @@
 	function addDB(array $args): array{
 		global $cloudant_url, $db_type_list;
 		
-		$origin = explode("//", $args["__ow_headers"]["origin"]);
 		$data = [ // Инициализация данных
 		 "name" => strval(trim($args["name"])),
 		 "type" => strval(trim($args["type"])),
@@ -13,14 +12,13 @@
 		 "port" => intval(trim($args["port"])),
 		 "user" => strval(trim($args["user"])),
 		 "password" => strval(trim($args["password"])),
-		 "db" => strval(trim($args["db"])),
-		 "scope" => $origin[1]
+		 "db" => strval(trim($args["db"]))
 		];
 		
-		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
+		// Получение баз данных приложения
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		$document = getDocument($args["iam-token"], "app_db", $origin[1]);
 		$document = $document["document"];
-		
-		// Получение списка всех баз данных для добавления к ним новой
 		$databases = $document["databases"];
 		if($databases[$data["name"]]) // Проверка на существование введенного названия БД
 			return ["response" => ["error" => "Данное название для базы данных уже занято"]];
@@ -34,7 +32,7 @@
 		$put = json_encode(["_rev" => $document["_rev"], "databases" => $databases]);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => $cloudant_url."user_db/".$document["_id"],
+		 CURLOPT_URL => $cloudant_url."app_db/".$document["_id"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_FOLLOWLOCATION => 1,
 		 CURLOPT_TIMEOUT => 60,
@@ -54,21 +52,22 @@
 	function deleteDB(array $args): array{
 		global $cloudant_url;
 		
-		// Получение пользовательского документа и баз данных
-		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		
+		// Получение баз данных
+		$document = getDocument($args["iam-token"], "app_db", $origin[1]);
 		$document = $document["document"];
 		$databases = $document["databases"];
-		$origin = explode("//", $args["__ow_headers"]["origin"]);
 		
 		$name = strval(trim($args["name"])); // Имя базы данных для удаления
 		
-		if($databases[$name]["scope"] == $origin[1]) unset($databases[$name]); // Удаление БД из списка
+		unset($databases[$name]); // Удаление БД из списка
 		
 		// Обновление документа
 		$upd = json_encode(["_rev" => $document["_rev"], "databases" => $databases]);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => $cloudant_url."user_db/".$document["_id"],
+		 CURLOPT_URL => $cloudant_url."app_db/".$document["_id"],
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_FOLLOWLOCATION => 1,
 		 CURLOPT_TIMEOUT => 60,
@@ -86,26 +85,32 @@
 	}
 	
 	// Получение списка названий-идентификаторов баз данных пользователя
-	function getDBList(array $tokens): array{
-		$document = getUserDocument($tokens);
+	function getDBList(array $token): array{
+		$origin = explode("//", $token["__ow_headers"]["origin"]);
+		$document = getDocument($token["iam-token"], "app_db", $origin[1]);
 		$document = $document["document"];
-		$origin = explode("//", $tokens["__ow_headers"]["origin"]);
 		foreach($document["databases"] as $id => $val)
-			if($val["scope"] == $origin[1]) $databases[$val["name"]] = $val["name"];
+			$databases[$val["name"]] = $val["name"];
 		return ["databases" => $databases];
 	}
 	
-	// Получение списка баз данных пользователя для страницы настроек
-	function getDBSettings(array $tokens): array{
-		global $private_key, $to_decrypt;
+	// Получение списка баз данных для страницы настроек
+	function getDBSettings(array $token): array{
+		global $to_decrypt;
 		
-		$document = getUserDocument($tokens);
-		$document = $document["document"];
-		$origin = explode("//", $tokens["__ow_headers"]["origin"]);
+		$origin = explode("//", $token["__ow_headers"]["origin"]);
 		
-		foreach($document["databases"] as $id => $val){
-			if($val["scope"] != $origin[1]) continue;
-			
+		// Получение приложения
+		$app = getDocument($token["iam-token"], "applications", $origin[1]);
+		$app = $app["document"];
+		
+		// Получение баз данных
+		$db = getDocument($token["iam-token"], "app_db", $origin[1]);
+		$db = $db["document"];
+		
+		$private_key = $app["private_key"];
+		
+		foreach($db["databases"] as $id => $val){
 			// Расшифровка полей для подстановки в форму
 			foreach($to_decrypt as $field){
 				if(!$val[$field]) continue;
@@ -120,7 +125,8 @@
 	}
 	
 	// Получение публичного ключа для шифрования необходимых полей на клиенте
-	function getPublicKey(): array{
-		global $public_key;
-		return ["public_key" => $public_key];
+	function getPublicKey(array $args): array{
+		$header = explode("//", $args["__ow_headers"]["origin"]);
+		$app = getDocument($args["iam-token"], "applications", $header[1]);
+		return ["public_key" => $app["document"]["public_key"]];
 	}

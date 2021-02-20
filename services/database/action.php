@@ -128,15 +128,18 @@
 	
 	// Подключение к базе данных MySQL
 	function connect(array $args){
-		global $private_key, $to_decrypt;
+		global $to_decrypt;
 		
-		$document = getUserDocument(["user-token" => $args["user-token"], "iam-token" => $args["iam-token"]]);
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		
+		// Получение приватного ключа из настроек приложения
+		$app = getDocument($args["iam-token"], "applications", $origin[1]);
+		$private_key = $app["document"]["private_key"];
+		
+		// Получение базы данных из настроек
+		$document = getDocument($args["iam-token"], "app_db", $origin[1]);
 		$document = $document["document"];
 		$db = $document["databases"][$args["db"]]; // Массив с параметрами запрашиваемой базы данных
-		
-		// Проверка области доступа
-		$origin = explode("//", $args["__ow_headers"]["origin"]);
-		if($db["scope"] != $origin[1]) return ["response" => ["error" => "Ошибка подключения"]];
 		
 		// Дешифрование параметров для подключения
 		foreach($to_decrypt as $field){

@@ -10,7 +10,6 @@ $(document).ready(function(){
 				"Authorization": "Bearer " + localStorage.getItem("user_token")
 			},
 			data: {
-				"user-token": localStorage.getItem("user_token"),
 				"iam-token": localStorage.getItem("IAM_token")
 			},
 			success: function(result){
@@ -104,7 +103,6 @@ $(document).ready(function(){
 						},
 						data: {
 							"name": form.closest(".change-db").data("db"),
-							"user-token": localStorage.getItem("user_token"),
 							"iam-token": localStorage.getItem("IAM_token")
 						},
 						success: function(){
@@ -145,7 +143,6 @@ $(document).ready(function(){
 											"password": encryption.encrypt(form.find("[name='password']").val()),
 											"db": encryption.encrypt(form.find("[name='db']").val()),
 											"type": form.find("[name='type']").val(),
-											"user-token": localStorage.getItem("user_token"),
 											"iam-token": localStorage.getItem("IAM_token")
 										},
 										success: function(result){
@@ -202,7 +199,6 @@ $(document).ready(function(){
 						},
 						data: {
 							"name": $this.closest(".change-db").data("db"),
-							"user-token": localStorage.getItem("user_token"),
 							"iam-token": localStorage.getItem("IAM_token")
 						},
 						success: function(result){
@@ -240,10 +236,13 @@ $(document).ready(function(){
 		// Получение и инициализация публичного ключа
 		$.ajax({
 			url: config.api_db_management + "/publicKey",
-			type: "GET",
+			type: "POST",
 			dataType: "json",
 			headers: {
 				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"iam-token": localStorage.getItem("IAM_token")
 			},
 			success: function(result){
 				public_key = result.public_key;
@@ -274,7 +273,6 @@ $(document).ready(function(){
 						"password": encryption.encrypt($("[name='password']").val()),
 						"db": encryption.encrypt($("[name='db']").val()),
 						"type": $("[name='type']").val(),
-						"user-token": localStorage.getItem("user_token"),
 						"iam-token": localStorage.getItem("IAM_token")
 					},
 					success: function(result){

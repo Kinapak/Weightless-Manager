@@ -15,7 +15,6 @@ $(document).ready(function(){
 		},
 		data: {
 			"db": current_db,
-			"user-token": localStorage.getItem("user_token"),
 			"iam-token": localStorage.getItem("IAM_token")
 		},
 		success: function(result){
@@ -80,7 +79,6 @@ $(document).ready(function(){
 				"db": current_db,
 				"limit_first": 0,
 				"limit_second": limit,
-				"user-token": localStorage.getItem("user_token"),
 				"iam-token": localStorage.getItem("IAM_token")
 			},
 			success: function(result){
@@ -160,7 +158,6 @@ $(document).ready(function(){
 							"db": current_db,
 							"limit_first": lim,
 							"limit_second": limit,
-							"user-token": localStorage.getItem("user_token"),
 							"iam-token": localStorage.getItem("IAM_token")
 						},
 						success: function(result){
@@ -224,7 +221,6 @@ $(document).ready(function(){
 					"changed_value": changed_value,
 					"primary_field": primary_field,
 					"primary_value": primary_value,
-					"user-token": localStorage.getItem("user_token"),
 					"iam-token": localStorage.getItem("IAM_token")
 				},
 				success: function(result){
@@ -299,7 +295,6 @@ $(document).ready(function(){
 					"table": current_table,
 					"fields": JSON.stringify(fields),
 					"primary_field": $("#db-view [data-primary]").text(),
-					"user-token": localStorage.getItem("user_token"),
 					"iam-token": localStorage.getItem("IAM_token")
 				},
 				success: function(result){
