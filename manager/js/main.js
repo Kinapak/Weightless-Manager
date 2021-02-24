@@ -54,10 +54,7 @@ function dbList(){
 		success: function(result){
 			$databases.html("");
 			
-			if(!result.databases){
-				$databases.append('<li><a href="views/dbManagement.html">Добавить базу данных</a></li>');
-				return false;
-			}
+			if(!result.databases) return false;
 			
 			$.each(result.databases, function(id, val){
 				$databases.append("<li><a href='views/database.html'>" + id + "</a></li>");
