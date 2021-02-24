@@ -6,7 +6,7 @@
 		global $tenant_id, $appid_key, $cloudant_reader_key, $cloudant_writer_key;
 		
 		// Преобразование к uri
-		$redirect = $args["__ow_headers"]["origin"];
+		$redirect = $args["__ow_headers"]["origin"].$args["path"];
 		$redirect = str_replace(":", "%3A", $redirect);
 		$redirect = str_replace("/", "%2F", $redirect);
 		

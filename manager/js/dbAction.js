@@ -43,7 +43,7 @@ $(document).ready(function(){
 						data: result.tables.empty || result.tables,
 						paging: false,
 						language: {
-							url: "/manager/js/plugins/dataTables.russian.json"
+							url: "manager/js/plugins/dataTables.russian.json"
 						}
 					});
 				
@@ -114,7 +114,7 @@ $(document).ready(function(){
 					columns: cols,
 					pageLength: 50,
 					language: {
-						url: "/manager/js/plugins/dataTables.russian.json"
+						url: "manager/js/plugins/dataTables.russian.json"
 					}
 				});
 				

@@ -8,7 +8,8 @@ setTimeout(function(){
 			data: {
 				"code": params["code"],
 				"app_id": config.app_id,
-				"secret": config.secret
+				"secret": config.secret,
+				"path": location.pathname
 			},
 			success: function(result){
 				// Если пришли токены, то запоминаем их
@@ -16,7 +17,7 @@ setTimeout(function(){
 					localStorage.setItem("user_token", result.response.user_token);
 					localStorage.setItem("IAM_token", result.response.iam_token);
 					localStorage.setItem("user_info", JSON.stringify(result.response.user_info));
-					location.href = "/";
+					location.href = config.domain;
 				} else{ // Иначе вывод ошибки
 					wmAlert("Ошибка авторизации!", "fail");
 				}
@@ -110,9 +111,9 @@ function loadView(href, title){
 	checkToken();
 	
 	// Подгрузка страницы. Если нет страницы, вывод 404
-	$("#main-view").load("/manager/" + href, function(response, status, xhr){
+	$("#main-view").load("manager/" + href, function(response, status, xhr){
 		if(status == "error"){
-			$("#main-view").load("/manager/views/404.html");
+			$("#main-view").load("manager/views/404.html");
 			wmAlert("Элемент не найден", "fail");
 		}
 	});
@@ -153,5 +154,5 @@ $(document).on("click", "#logout", function(){
 	localStorage.removeItem("user_info");
 	
 	// Переход на главную сайта
-	location.href="/";
+	location.href = "/";
 });
