@@ -85,8 +85,9 @@
 		// Обработка других ролей и назначение новой
 		$header = explode("//", $args["__ow_headers"]["origin"]);
 		$new_roles = ["roles" => ["names" => []]];
-		foreach($roles["roles"] as $role)
-			if(!preg_match("/".$header[1]."_access/", $role["name"])) $new_roles["roles"]["names"][] = $role["name"];
+		// Предварительно сбор старых ролей, исключая роли по текущему приложению
+		foreach($roles["roles"] as $rl)
+			if(!preg_match("/".$header[1]."_access/", $rl["name"])) $new_roles["roles"]["names"][] = $rl["name"];
 		$new_roles["roles"]["names"][] = "WM_".$header[1]."_access_".$role;
 		
 		// Добавление обновленных ролей
