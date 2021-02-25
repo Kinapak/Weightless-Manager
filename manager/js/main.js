@@ -18,8 +18,11 @@ setTimeout(function(){
 					localStorage.setItem("IAM_token", result.response.iam_token);
 					localStorage.setItem("user_info", JSON.stringify(result.response.user_info));
 					location.href = config.domain;
-				} else{ // Иначе вывод ошибки
+				} else{ // Иначе вывод ошибки и редирект на главную сайта
 					wmAlert("Ошибка авторизации!", "fail");
+					setTimeout(function(){
+						location.href = "/";
+					}, 4000);
 				}
 			}
 		});

@@ -110,7 +110,7 @@
 		else return ["response" => "Successful"];
 	}
 	
-	// Назначение роли новому для приложения пользователю
+	// Удаление пользователя из приложения
 	function removeUser(array $args): array{
 		global $tenant_id;
 		
