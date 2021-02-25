@@ -13,5 +13,12 @@
 </div>
 
 <script src="https://russiabase.ru/wm/v0.2.0/manager/js/plugins/jquery.datatables.min.js"></script>
-<script src="https://russiabase.ru/wm/v0.2.0/manager/js/plugins/datatables.bootstrap.min.js"></script>
+<script type="text/javascript">
+	// Задержка для успешной подгрузки jQuery
+	setTimeout(function(){
+		$("body").append(
+			"<scr"+"ipt src=\"https://russiabase.ru/wm/v0.2.0/manager/js/plugins/datatables.bootstrap.min.js\"></scr"+"ipt>"
+		);
+	}, 300);
+</script>
 <script src="https://russiabase.ru/wm/v0.2.0/manager/js/dbAction.js"></script>
