@@ -2719,6 +2719,14 @@ ul li a:focus{
 	transition: all .35s ease-in-out;
 }
 
+#version{
+	color: #918c8c;
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+}
+
 /*----right menu-------*/
 
 #right-menu{
