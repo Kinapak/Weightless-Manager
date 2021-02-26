@@ -253,6 +253,12 @@ $(document).ready(function(){
 	});
 	
 	$(".responsive-table").on("click", "#insert-row", function(){
+		// Повторное нажатие закрывает добавление строки
+		if($("#new-row").length){
+			$("#new-row").parent().remove();
+			return false;
+		}
+		
 		// Добавление строки для новых значений над таблицей
 		$(this).closest(".row").append(
 			"<div class='col-sm-12'>" +
