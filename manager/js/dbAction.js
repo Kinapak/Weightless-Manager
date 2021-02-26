@@ -83,9 +83,11 @@ $(document).ready(function(){
 			},
 			success: function(result){
 				// Вывод ошибки
-				if(result.data.error){
-					wmAlert(result.data.error, "fail");
-					return false;
+				if(result.data){
+					if(result.data.error){
+						wmAlert(result.data.error, "fail");
+						return false;
+					}
 				}
 				
 				// Добавление названия таблицы к заголовкам
@@ -95,33 +97,12 @@ $(document).ready(function(){
 				// Активация хлебной крошки к базе данных
 				$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
 				
+				// Обработка клика по хлебной крошке
+				$("#to-db").click(function(){
+					viewDB();
+				});
+				
 				$("#db-loading").css("display", "none");
-				
-				// Обработка пустой таблицы
-				if(result.data.empty){
-					$("#db-view").html(result.data.empty);
-					return false;
-				}
-				
-				// Инициализация колонок
-				let cols = [];
-				$.each(result.data[0], function(id, val){
-					cols.push({title: id, data: id});
-				});
-				
-				// Инициализация новой таблицы с колонками
-				dt = $('#db-view').DataTable({
-					columns: cols,
-					pageLength: 50,
-					language: {
-						url: "manager/js/plugins/dataTables.russian.json"
-					}
-				});
-				
-				// Добавление полученных строк с данными
-				dt.rows.add(result.data).draw();
-				
-				$('#db-view tbody').attr("data-type", "table-view");
 				
 				// Добавление кнопки вставки новых строк с таймаутом для отрисовки полей
 				setTimeout(function(){
@@ -131,6 +112,32 @@ $(document).ready(function(){
 						"</span>"
 					);
 				}, 100);
+				
+				// Инициализация новой таблицы с колонками
+				dt = $('#db-view').DataTable({
+					columns: result.cols,
+					pageLength: 50,
+					language: {
+						url: "manager/js/plugins/dataTables.russian.json"
+					}
+				});
+				
+				// Добавление полученных строк с данными по столбцам
+				if(result.data){
+					let table_data = [];
+					$.each(result.data, function(id, val){
+						let dt = {};
+						
+						$.each(result.cols, function(col_id, col){
+							dt[col.title] = val[col.title];
+						});
+						
+						table_data.push(dt);
+					});
+					dt.rows.add(result.data).draw();
+				}
+				
+				$('#db-view tbody').attr("data-type", "table-view");
 				
 				// Определение столбца с primary_key
 				if(result.primary_field){
@@ -171,11 +178,6 @@ $(document).ready(function(){
 				}
 				
 				next(limit);
-				
-				// Обработка клика по хлебной крошке
-				$("#to-db").click(function(){
-					viewDB();
-				});
 			},
 			error: function(error){
 				console.log(error);

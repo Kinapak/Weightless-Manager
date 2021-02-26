@@ -18,24 +18,26 @@
 	
 	// Получение данных в таблице
 	function getTable(array $args): array{
-		// Получение части данных по переданному лимиту в таблице и выдача ответа
+		// Получение части данных по переданному лимиту в таблице, получение колонок
 		$res = query(
 		 $args,
 		 "SELECT * FROM `".$args["table"]."` limit %d, %d",
 		 [$args["limit_first"], $args["limit_second"]]
 		);
-		if(!$res) $data["error"] = "ОШИБКА: Некорректный запрос!";
-		if(!mysqli_num_rows($res) and $args["limit_first"] == 0) $data["empty"] = [["Таблица пуста."]];
-		else{
-			// Получение первичного ключа, если есть
-			$primarysel = query($args, "SHOW INDEX FROM `".$args["table"]."` WHERE Key_name = %s", ["PRIMARY"]);
-			$primary = mysqli_fetch_assoc($primarysel);
-			
-			// Обработка полученных данных
-			while($row = mysqli_fetch_assoc($res)) $data[] = $row;
-		}
+		$columns = query($args, "SHOW COLUMNS FROM `".$args["table"]."`");
 		
-		return ["data" => $data, "primary_field" => $primary["Column_name"]];
+		// Обработка ошибки
+		if(!$res or !$columns) $data["error"] = "ОШИБКА: Некорректный запрос!";
+		
+		// Получение первичного ключа, если есть
+		$primarysel = query($args, "SHOW INDEX FROM `".$args["table"]."` WHERE Key_name = %s", ["PRIMARY"]);
+		$primary = mysqli_fetch_assoc($primarysel);
+		
+		// Обработка полученных данных
+		while($row = mysqli_fetch_assoc($res)) $data[] = $row;
+		while($col = mysqli_fetch_assoc($columns)) $cols[] = ["title" => $col["Field"], "data" => $col["Field"]];
+		
+		return ["cols" => $cols, "data" => $data, "primary_field" => $primary["Column_name"]];
 	}
 	
 	// Операция добавления значений в таблицу БД
