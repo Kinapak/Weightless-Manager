@@ -6766,6 +6766,16 @@ ul li a:focus{
 	cursor: pointer;
 }
 
+.remove-row{
+	float: right;
+	margin-left: 10px;
+	color: #fec8c3;
+}
+
+.remove-row:hover{
+	text-decoration: underline;
+}
+
 @keyframes rippleForm{
 	from{
 		-webkit-opacity: 0.8;

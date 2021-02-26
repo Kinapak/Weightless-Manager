@@ -96,6 +96,23 @@
 		return ["response" => $res === true ? $res : ["error" => $res]];
 	}
 	
+	function rowRemove(array $args): array{
+		// Обработка ошибок
+		if(
+		 !strlen(trim($args["table"])) or
+		 !strlen(trim($args["primary_field"])) or
+		 !strlen(trim($args["primary_value"]))
+		) return ["response" => ["error" => "ОШИБКА: Некорректный запрос!"]];
+		
+		$res = query(
+		 $args,
+		 "DELETE FROM `".$args["table"]."` WHERE ".trim($args["primary_field"])."=%s",
+		 [$args["primary_value"]]
+		);
+		
+		return ["response" => $res === true ? $res : ["error" => $res]];
+	}
+	
 	// Запрос к базе данных с плейсхолдерами
 	function query(array $connect_args, $sql, $query_args = array()){
 		// Инициализация базы данных

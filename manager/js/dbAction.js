@@ -148,6 +148,13 @@ $(document).ready(function(){
 								return false;
 							}
 						});
+						
+						// Кнопка удаления строки из таблицы
+						$.each($("tbody tr"), function(){
+							$($(this)
+								.find($("td"))[$("#db-view [data-primary]").index()])
+								.append("<i class='fa fa-close fa-lg remove-row' title='Удалить строку'></i>");
+						});
 					}, 100);
 				} else wmAlert("Таблица не содержит уникального столбца. Обновление ячеек невозможно.");
 				
@@ -321,6 +328,42 @@ $(document).ready(function(){
 					$this.parent().remove();
 				}
 			});
+		});
+	});
+	
+	$(".responsive-table").on("click", ".remove-row", function(){
+		if(!confirm("Подтвердите удаление")) return false;
+		
+		// Подготовка значений
+		let primary_field = $("#db-view [data-primary]").text();
+		let primary_value = $(this).parent().text();
+		$(this).removeClass("fa-close").addClass("fa-spinner fa-pulse");
+		let $this = $(this);
+		
+		// Удаление строки из таблицы БД
+		$.ajax({
+			url: config.api_db_action + "/remove",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"table": current_table,
+				"primary_field": primary_field,
+				"primary_value": primary_value,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				// Удаление строки из таблицы на клиенте
+				$this.parent().parent().remove();
+			}
 		});
 	});
 	
