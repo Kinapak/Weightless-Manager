@@ -581,6 +581,8 @@ $(document).ready(function(){
 					// Добавление новой таблицы в список
 					dt.rows.add([[$("#new-table [data-name='title']").text()]]).draw();
 					
+					wmAlert("Таблица " + $("#new-table [data-name='title']").text() + " успешно создана", "success");
+					
 					$this.parent().remove();
 				}
 			});
