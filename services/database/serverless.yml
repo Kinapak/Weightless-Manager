@@ -31,12 +31,12 @@ functions:
     name: database/getPublicKey
     events:
       - http: POST database/publicKey
+
   getDBTables:
     handler: action.getDBTables
     name: database/getDBTables
     events:
       - http: POST database/tables
-
   getTable:
     handler: action.getTable
     name: database/getTable
@@ -44,6 +44,13 @@ functions:
     timeout: 600
     events:
       - http: POST database/table
+  addTable:
+    handler: action.addTable
+    name: database/addTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST database/addTable
   tableUpdate:
     handler: action.tableUpdate
     name: database/tableUpdate

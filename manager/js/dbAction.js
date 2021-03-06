@@ -48,6 +48,17 @@ $(document).ready(function(){
 					});
 				
 				$('#db-view tbody').attr("data-type", "tables");
+				
+				// Кнопка добавления новой таблицы
+				setTimeout(function(){
+					$("#db-view_wrapper .row:eq(0) .col-sm-6:eq(0)").prepend(
+						"<p style='margin: 0; padding: 10px 1px;'>" +
+						"<span id='insert-table' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer;'>" +
+						"Добавить таблицу" +
+						"</span>" +
+						"</p>"
+					);
+				}, 100);
 			}
 			
 			viewDB();
@@ -364,6 +375,132 @@ $(document).ready(function(){
 				// Удаление строки из таблицы на клиенте
 				$this.parent().parent().remove();
 			}
+		});
+	});
+	
+	$(".responsive-table").on("click", "#insert-table", function(){
+		// Добавление строк для создания таблицы
+		function newTableAddRow(count){
+			for(var i = 0; i < count; i++)
+				$("#new-table").append(
+					"<tr>" +
+					"<td contenteditable='true' data-name='name'></td>" +
+					"<td><select class='form-control' style='width: 100%; height: 30px;' data-name='type'>" +
+					"<option value='INT'>INT</option>" +
+					"<option value='VARCHAR'>VARCHAR</option>" +
+					"<option value='TEXT'>TEXT</option>" +
+					"<option value='DECIMAL'>DECIMAL</option>" +
+					"<option value='FLOAT'>FLOAT</option>" +
+					"<option value='DOUBLE'>DOUBLE</option>" +
+					"<option value='BOOLEAN'>BOOLEAN</option>" +
+					"<option value='DATE'>DATE</option>" +
+					"<option value='DATETIME'>DATETIME</option>" +
+					"<option value='JSON'>JSON</option>" +
+					"</select></td>" +
+					"<td contenteditable='true' data-name='length'></td>" +
+					"<td contenteditable='true' data-name='default'></td>" +
+					"<td><select class='form-control' style='width: 100%; height: 30px;' data-name='index'>" +
+					"<option value='0'>Нет</option>" +
+					"<option value='PRIMARY KEY'>PRIMARY</option>" +
+					"<option value='UNIQUE'>UNIQUE</option>" +
+					"<option value='INDEX'>INDEX</option>" +
+					"<option value='FULLTEXT'>FULLTEXT</option>" +
+					"<option value='SPATIAL'>SPATIAL</option>" +
+					"</select></td>" +
+					"<td><input type='checkbox' data-name='ai'></td>" +
+					"</tr>"
+				);
+		}
+		
+		// Повторное нажатие закрывает добавление строки
+		if($("#new-table").length){
+			$("#new-table").parent().remove();
+			return false;
+		}
+		
+		// Добавление заголовков
+		$(this).closest(".row").append(
+			"<div class='col-sm-12'>" +
+			"<table id='new-table' class='table table-bordered dataTable'>" +
+			"<tr><td>Название таблицы:</td><td contenteditable='true' colspan='5' data-name='title'></td></tr>" +
+			"<tr><td>Имя</td><td>Тип</td><td>Длина</td><td>По умолчанию</td><td>Индекс</td><td>A_I</td></tr>" +
+			"</table>" +
+			"<button id='add-table' class='btn btn-round btn-primary' style='transform: scale(0.9);'>Добавить</button>" +
+			"<span id='add-table-row' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; float: right;'>Вставить строку</span>" +
+			"</div>"
+		);
+		
+		newTableAddRow(4);
+		
+		// Сразу фокусировка на поле с названием таблицы
+		$("#new-table tr td:eq(1)").focus();
+		
+		$("#add-table-row").click(function(){
+			newTableAddRow(1);
+		});
+		
+		// Отправка новых данных
+		$("#new-table").parent().on("click", "#add-table", function(){
+			let $this = $(this);
+			
+			// Отображение загрузки и блокировка кнопки
+			$(this).html("<i class='fa fa-spinner fa-pulse fa-lg'></i>");
+			$(this).attr("id", "");
+			
+			let fields = {}; // Поля для добавления
+			let name = false; // Ключ каждого поля
+			let position = -1; // Позиция каждого поля в таблице (порядок сортировки)
+			
+			// Сборка полей
+			$("#new-table [data-name]").each(function(){
+				// Назначение ключа
+				if($(this).data("name") == "name"){
+					name = $(this).text();
+					
+					if(!name) return; // Пропуск, если нет ключа
+					
+					position++;
+					fields[name] = {};
+					fields[name]["position"] = position;
+				}
+				if(!name) return; // Пропуск, если нет ключа
+				
+				// Добавление данных
+				if($(this).data("name") == "name" || $(this).data("name") == "length" || $(this).data("name") == "default")
+					fields[name][$(this).data("name")] = $(this).text();
+				else if($(this).data("name") == "ai")
+					fields[name][$(this).data("name")] = $(this).is(":checked");
+				else fields[name][$(this).data("name")] = $(this).val();
+			});
+			
+			$.ajax({
+				url: config.api_db_action + "/addTable",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"db": current_db,
+					"title": $("#new-table [data-name='title']").text(),
+					"fields": JSON.stringify(fields),
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					// Вывод ошибки добавления
+					if(result.response.error){
+						wmAlert(result.response.error, "fail");
+						$this.html("Добавить");
+						$this.attr("id", "add-table");
+						return false;
+					}
+					
+					// Добавление новой таблицы в список
+					dt.rows.add([[$("#new-table [data-name='title']").text()]]).draw();
+					
+					$this.parent().remove();
+				}
+			});
 		});
 	});
 	

@@ -40,6 +40,40 @@
 		return ["cols" => $cols, "data" => $data, "primary_field" => $primary["Column_name"]];
 	}
 	
+	function addTable(array $args): array{
+		// Обработка начальных ошибок
+		if(!strlen(trim($args["db"]))) return ["response" => ["error" => "Некорректно указана база данных"]];
+		if(!strlen(trim($args["title"]))) return ["response" => ["error" => "Некорректно указано название новой таблицы"]];
+		$args["fields"] = json_decode($args["fields"], true);
+		if(!count($args["fields"])) return ["response" => ["error" => "Не указано ни одно новое поле"]];
+		
+		// Сборка запроса
+		$sql = "CREATE TABLE `".trim($args["title"])."` ( ";
+		foreach($args["fields"] as $name => $data){
+			$sql .= "`".trim($name)."` ".trim($data["type"]);
+			
+			if(strlen(trim($data["length"]))) $sql .= "(".trim($data["length"]).")";
+			
+			if(!strlen(trim($data["default"]))) $sql .= " NOT NULL";
+			else if(trim(mb_strtolower($data["default"])) == "null") $sql .= " NULL DEFAULT NULL";
+			else if(strlen(trim($data["default"]))) $sql .= " NOT NULL DEFAULT '".trim($data["default"])."'";
+			
+			if($data["ai"]) $sql .= " AUTO_INCREMENT";
+			
+			if(strlen(trim($data["index"])) > 1) $index .= trim($data["index"])." (`".trim($name)."`), ";
+			
+			$sql .= " , ";
+		}
+		$sql = substr($sql, 0, -2);
+		$index = substr($index, 0, -2);
+		if(strlen($index) > 3) $sql .= " , ".$index;
+		$sql .= ")  ENGINE = InnoDB;";
+		
+		$res = query($args, $sql);
+		
+		return ["response" => $res === true ? $res : ["error" => $res]];
+	}
+	
 	// Операция добавления значений в таблицу БД
 	function tableInsert(array $args): array{
 		global $link;
