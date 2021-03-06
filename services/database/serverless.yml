@@ -51,6 +51,13 @@ functions:
     timeout: 600
     events:
       - http: POST database/addTable
+  dropTable:
+    handler: action.dropTable
+    name: database/dropTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST database/dropTable
   tableUpdate:
     handler: action.tableUpdate
     name: database/tableUpdate

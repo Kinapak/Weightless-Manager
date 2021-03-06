@@ -74,6 +74,16 @@
 		return ["response" => $res === true ? $res : ["error" => $res]];
 	}
 	
+	function dropTable(array $args): array{
+		// Обработка ошибки
+		$table = trim($args["table"]);
+		if(!strlen($table)) return ["response" => ["error" => "Некорректный запрос"]];
+		
+		$res = query($args, "DROP TABLE `".$table."`");
+		
+		return ["response" => $res === true ? $res : ["error" => $res]];
+	}
+	
 	// Операция добавления значений в таблицу БД
 	function tableInsert(array $args): array{
 		global $link;

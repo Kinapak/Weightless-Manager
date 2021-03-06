@@ -115,11 +115,26 @@ $(document).ready(function(){
 				
 				$("#db-loading").css("display", "none");
 				
-				// Добавление кнопки вставки новых строк с таймаутом для отрисовки полей
+				// Добавление кнопок управления таблицей с таймаутом для отрисовки полей
 				setTimeout(function(){
+					// Вставить строку
 					$("#db-view_length").append(
-						"<span id='insert-row' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; margin-left: 15px;'>" +
+						"<span id='insert-row' style='border-bottom:1px dashed #d8d8d8;cursor:pointer;margin-left:15px;'>" +
 						"Вставить строку" +
+						"</span>"
+					);
+					
+					// Удалить таблицу
+					$("#db-view_length").append(
+						"<span id='drop-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+						"Удалить таблицу" +
+						"</span>"
+					);
+					
+					// Очистить таблицу
+					$("#db-view_length").append(
+						"<span id='truncate-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+						"Очистить таблицу" +
 						"</span>"
 					);
 				}, 100);
@@ -270,6 +285,7 @@ $(document).ready(function(){
 		});
 	});
 	
+	// Обработка новой строки в таблице
 	$(".responsive-table").on("click", "#insert-row", function(){
 		// Повторное нажатие закрывает добавление строки
 		if($("#new-row").length){
@@ -342,6 +358,7 @@ $(document).ready(function(){
 		});
 	});
 	
+	// Удаление строки в таблице
 	$(".responsive-table").on("click", ".remove-row", function(){
 		if(!confirm("Подтвердите удаление")) return false;
 		
@@ -378,6 +395,39 @@ $(document).ready(function(){
 		});
 	});
 	
+	// Удаление таблицы
+	$(".responsive-table").on("click", "#drop-table", function(){
+		if(!confirm("Подтвердите удаление")) return false;
+		
+		$(this).text("").css("border", "none").addClass("fa fa-spinner fa-pulse");
+		
+		// Удаление таблицы из БД
+		$.ajax({
+			url: config.api_db_action + "/dropTable",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"table": current_table,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				wmAlert("Таблица " + current_table + " успешно удалена", "success");
+				
+				viewDB();
+			}
+		});
+	});
+	
+	// Создание таблицы в БД
 	$(".responsive-table").on("click", "#insert-table", function(){
 		// Добавление строк для создания таблицы
 		function newTableAddRow(count){
