@@ -427,6 +427,39 @@ $(document).ready(function(){
 		});
 	});
 	
+	// Очистка таблицы
+	$(".responsive-table").on("click", "#truncate-table", function(){
+		if(!confirm("Подтвердите очистку таблицы")) return false;
+		
+		let $this = $(this);
+		$(this).text("").css("border", "none").addClass("fa fa-spinner fa-pulse");
+		
+		// Очистка таблицы
+		$.ajax({
+			url: config.api_db_action + "/truncateTable",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"table": current_table,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				dt.clear().draw();
+				
+				$this.text("Очистить таблицу").css("border-bottom", "1px dashed #ff6656").removeClass("fa fa-spinner fa-pulse");
+			}
+		});
+	});
+	
 	// Создание таблицы в БД
 	$(".responsive-table").on("click", "#insert-table", function(){
 		// Добавление строк для создания таблицы
@@ -462,7 +495,7 @@ $(document).ready(function(){
 				);
 		}
 		
-		// Повторное нажатие закрывает добавление строки
+		// Повторное нажатие закрывает добавление таблицы
 		if($("#new-table").length){
 			$("#new-table").parent().remove();
 			return false;
