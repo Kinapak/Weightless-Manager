@@ -109,10 +109,13 @@ $(document).ready(function(){
 							// Получение и инициализация публичного ключа
 							$.ajax({
 								url: config.api_db_management + "/publicKey",
-								type: "GET",
+								type: "POST",
 								dataType: "json",
 								headers: {
 									"Authorization": "Bearer " + localStorage.getItem("user_token")
+								},
+								data: {
+									"iam-token": localStorage.getItem("IAM_token")
 								},
 								success: function(result){
 									public_key = result.public_key;
