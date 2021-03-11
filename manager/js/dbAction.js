@@ -71,152 +71,165 @@ $(document).ready(function(){
 	$("#db-view").on("click", "tbody[data-type='tables'] td", function(){
 		current_table = $(this).text().trim(); // Название таблицы для выборки из БД
 		
-		// Удаление текущей таблицы
-		dt.destroy();
-		$('#db-view').html("");
-		$("#db-loading").css("display", "block");
-		
-		let limit = 10000; // Лимит на кол-во запрашиваемых строк для разделения запросов
-		
-		$.ajax({
-			url: config.api_db_action + "/table",
-			type: "POST",
-			dataType: "json",
-			headers: {
-				"Authorization": "Bearer " + localStorage.getItem("user_token")
-			},
-			data: {
-				"table": current_table,
-				"db": current_db,
-				"limit_first": 0,
-				"limit_second": limit,
-				"iam-token": localStorage.getItem("IAM_token")
-			},
-			success: function(result){
-				// Вывод ошибки
-				if(result.data){
-					if(result.data.error){
-						wmAlert(result.data.error, "fail");
-						return false;
+		// Запрос таблицы
+		function requestTable(){
+			// Удаление текущей таблицы
+			dt.destroy();
+			$('#db-view').html("");
+			$("#db-loading").css("display", "block");
+			
+			let limit = 10000; // Лимит на кол-во запрашиваемых строк для разделения запросов
+			
+			$.ajax({
+				url: config.api_db_action + "/table",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"table": current_table,
+					"db": current_db,
+					"limit_first": 0,
+					"limit_second": limit,
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					// Вывод ошибки
+					if(result.data){
+						if(result.data.error){
+							wmAlert(result.data.error, "fail");
+							return false;
+						}
 					}
-				}
-				
-				// Добавление названия таблицы к заголовкам
-				$("#db-name").append(" > " + current_table);
-				$("title").append(" > " + current_table);
-				
-				// Активация хлебной крошки к базе данных
-				$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
-				
-				// Обработка клика по хлебной крошке
-				$("#to-db").click(function(){
-					viewDB();
-				});
-				
-				$("#db-loading").css("display", "none");
-				
-				// Добавление кнопок управления таблицей с таймаутом для отрисовки полей
-				setTimeout(function(){
-					// Вставить строку
-					$("#db-view_length").append(
-						"<span id='insert-row' style='border-bottom:1px dashed #d8d8d8;cursor:pointer;margin-left:15px;'>" +
-						"Вставить строку" +
-						"</span>"
-					);
 					
-					// Удалить таблицу
-					$("#db-view_length").append(
-						"<span id='drop-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
-						"Удалить таблицу" +
-						"</span>"
-					);
+					// Активация хлебной крошки к базе данных
+					$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
 					
-					// Очистить таблицу
-					$("#db-view_length").append(
-						"<span id='truncate-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
-						"Очистить таблицу" +
-						"</span>"
-					);
-				}, 100);
-				
-				// Инициализация новой таблицы с колонками
-				dt = $('#db-view').DataTable({
-					columns: result.cols,
-					pageLength: 50,
-					language: {
-						url: "https://russiabase.ru/wm/v0.3.0/manager/js/plugins/dataTables.russian.json"
-					}
-				});
-				
-				// Добавление полученных строк с данными по столбцам
-				if(result.data){
-					let table_data = [];
-					$.each(result.data, function(id, val){
-						let dt = {};
-						
-						$.each(result.cols, function(col_id, col){
-							dt[col.title] = val[col.title];
-						});
-						
-						table_data.push(dt);
+					// Добавление названия таблицы и кнопки обновления к заголовкам
+					$("#db-name")
+						.append("<span id='current_table'> > " + current_table + "</span>")
+						.append(" <i id='table-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
+					$("title").append(" > " + current_table);
+					
+					// Обработка клика по хлебной крошке
+					$("#to-db").click(function(){
+						viewDB();
 					});
-					dt.rows.add(result.data).draw();
-				}
-				
-				$('#db-view tbody').attr("data-type", "table-view");
-				
-				// Определение столбца с primary_key
-				if(result.primary_field){
-					setTimeout(function(){ // Небольшой таймаут для отрисовки заголовков полей
-						$("th").each(function(){
-							if($(this).text() == result.primary_field){
-								$(this).attr("data-primary", true);
-								return false;
-							}
-						});
+					
+					// Обработка клика по кнопке перезагрузки таблицы
+					$("#table-reload").click(function(){
+						$("#current_table, #table-reload").remove();
+						requestTable();
+					});
+					
+					$("#db-loading").css("display", "none");
+					
+					// Добавление кнопок управления таблицей с таймаутом для отрисовки полей
+					setTimeout(function(){
+						// Вставить строку
+						$("#db-view_length").append(
+							"<span id='insert-row' style='border-bottom:1px dashed #d8d8d8;cursor:pointer;margin-left:15px;'>" +
+							"Вставить строку" +
+							"</span>"
+						);
 						
-						// Кнопка удаления строки из таблицы
-						$.each($("tbody tr"), function(){
-							$($(this)
-								.find($("td"))[$("#db-view [data-primary]").index()])
-								.append("<i class='fa fa-close fa-lg remove-row' title='Удалить строку'></i>");
-						});
+						// Удалить таблицу
+						$("#db-view_length").append(
+							"<span id='drop-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+							"Удалить таблицу" +
+							"</span>"
+						);
+						
+						// Очистить таблицу
+						$("#db-view_length").append(
+							"<span id='truncate-table' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+							"Очистить таблицу" +
+							"</span>"
+						);
 					}, 100);
-				} else wmAlert("Таблица не содержит уникального столбца. Обновление ячеек невозможно.");
-				
-				// Рекурсивная функция получения следующих частей данных из таблицы
-				function next(lim){
-					$.ajax({
-						url: config.api_db_action + "/table",
-						type: "POST",
-						dataType: "json",
-						headers: {
-							"Authorization": "Bearer " + localStorage.getItem("user_token")
-						},
-						data: {
-							"table": current_table,
-							"db": current_db,
-							"limit_first": lim,
-							"limit_second": limit,
-							"iam-token": localStorage.getItem("IAM_token")
-						},
-						success: function(result){
-							// Добавление полученных строк с данными, запрос следующих, пока не будет пустого результата
-							if(result.data){
-								dt.rows.add(result.data).draw();
-								next(lim + limit);
-							}
+					
+					// Инициализация новой таблицы с колонками
+					dt = $('#db-view').DataTable({
+						columns: result.cols,
+						pageLength: 50,
+						language: {
+							url: "https://russiabase.ru/wm/v0.3.0/manager/js/plugins/dataTables.russian.json"
 						}
 					});
+					
+					// Добавление полученных строк с данными по столбцам
+					if(result.data){
+						let table_data = [];
+						$.each(result.data, function(id, val){
+							let dt = {};
+							
+							$.each(result.cols, function(col_id, col){
+								dt[col.title] = val[col.title];
+							});
+							
+							table_data.push(dt);
+						});
+						dt.rows.add(result.data).draw();
+					}
+					
+					$('#db-view tbody').attr("data-type", "table-view");
+					
+					// Определение столбца с primary_key
+					if(result.primary_field){
+						setTimeout(function(){ // Небольшой таймаут для отрисовки заголовков полей
+							$("th").each(function(){
+								if($(this).text() == result.primary_field){
+									$(this).attr("data-primary", true);
+									return false;
+								}
+							});
+							
+							// Кнопка удаления строки из таблицы
+							$.each($("tbody tr"), function(){
+								$($(this)
+									.find($("td"))[$("#db-view [data-primary]").index()])
+									.append("<i class='fa fa-close fa-lg remove-row' title='Удалить строку'></i>");
+							});
+						}, 100);
+					} else wmAlert("Таблица не содержит уникального столбца. Обновление ячеек невозможно.");
+					
+					// Рекурсивная функция получения следующих частей данных из таблицы
+					function next(lim){
+						$.ajax({
+							url: config.api_db_action + "/table",
+							type: "POST",
+							dataType: "json",
+							headers: {
+								"Authorization": "Bearer " + localStorage.getItem("user_token")
+							},
+							data: {
+								"table": current_table,
+								"db": current_db,
+								"limit_first": lim,
+								"limit_second": limit,
+								"iam-token": localStorage.getItem("IAM_token")
+							},
+							success: function(result){
+								// Добавление полученных строк с данными, запрос следующих, пока не будет пустого результата
+								if(result.data){
+									dt.rows.add(result.data).draw();
+									next(lim + limit);
+								}
+							}
+						});
+					}
+					
+					next(limit);
+				},
+				error: function(error){
+					console.log(error);
+					wmAlert("Что-то пошло не так... См. логи", "fail");
 				}
-				
-				next(limit);
-			},
-			error: function(error){
-				console.log(error);
-				wmAlert("Что-то пошло не так... См. логи", "fail");
-			}
-		});
+			});
+		}
+		
+		requestTable();
 	});
 	
 	// Обновление выбранного значения
