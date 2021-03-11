@@ -65,6 +65,10 @@ function checkToken(){
 					$(this).remove();
 				});
 			}
+		},
+		error: function(error){
+			wmAlert("Ошибка подключения", "fail");
+			console.log(error);
 		}
 	});
 }
