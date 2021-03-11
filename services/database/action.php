@@ -54,9 +54,11 @@
 			
 			if(strlen(trim($data["length"]))) $sql .= "(".trim($data["length"]).")";
 			
-			if(!strlen(trim($data["default"]))) $sql .= " NOT NULL";
-			else if(trim(mb_strtolower($data["default"])) == "null") $sql .= " NULL DEFAULT NULL";
-			else if(strlen(trim($data["default"]))) $sql .= " NOT NULL DEFAULT '".trim($data["default"])."'";
+			if($data["is-null"] or trim(mb_strtolower($data["default"])) == "null") $sql .= " NULL";
+			else $sql .= " NOT NULL";
+			
+			if(trim(mb_strtolower($data["default"])) == "null") $sql .= " DEFAULT NULL";
+			else if(strlen(trim($data["default"]))) $sql .= " DEFAULT '".trim($data["default"])."'";
 			
 			if($data["ai"]) $sql .= " AUTO_INCREMENT";
 			

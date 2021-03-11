@@ -503,6 +503,7 @@ $(document).ready(function(){
 					"<option value='FULLTEXT'>FULLTEXT</option>" +
 					"<option value='SPATIAL'>SPATIAL</option>" +
 					"</select></td>" +
+					"<td><input type='checkbox' data-name='is-null'></td>" +
 					"<td><input type='checkbox' data-name='ai'></td>" +
 					"</tr>"
 				);
@@ -519,7 +520,7 @@ $(document).ready(function(){
 			"<div class='col-sm-12'>" +
 			"<table id='new-table' class='table table-bordered dataTable'>" +
 			"<tr><td>Название таблицы:</td><td contenteditable='true' colspan='5' data-name='title'></td></tr>" +
-			"<tr><td>Имя</td><td>Тип</td><td>Длина</td><td>По умолчанию</td><td>Индекс</td><td>A_I</td></tr>" +
+			"<tr><td>Имя</td><td>Тип</td><td>Длина</td><td>По умолчанию</td><td>Индекс</td><td>NULL</td><td>A_I</td></tr>" +
 			"</table>" +
 			"<button id='add-table' class='btn btn-round btn-primary' style='transform: scale(0.9);'>Добавить</button>" +
 			"<span id='add-table-row' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; float: right;'>Вставить строку</span>" +
@@ -564,7 +565,7 @@ $(document).ready(function(){
 				// Добавление данных
 				if($(this).data("name") == "name" || $(this).data("name") == "length" || $(this).data("name") == "default")
 					fields[name][$(this).data("name")] = $(this).text();
-				else if($(this).data("name") == "ai")
+				else if($(this).data("name") == "ai" || $(this).data("name") == "is-null")
 					fields[name][$(this).data("name")] = $(this).is(":checked");
 				else fields[name][$(this).data("name")] = $(this).val();
 			});
