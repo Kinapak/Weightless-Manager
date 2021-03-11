@@ -31,7 +31,11 @@ setTimeout(function(){
 	// Информация о пользователе
 	let user_info = JSON.parse(localStorage.getItem("user_info"));
 	
+	// Установка имени пользователя и ссылки для изменения пароля
 	$(".user-name span").text(user_info.name);
+	$(".user-name ul").append(
+		`<li><a href='https://eu-gb.appid.cloud.ibm.com/oauth/v4/${config.tenant}/authorization?response_type=change_password&client_id=${config.app_id}&redirect_uri=${encodeURI(config.domain)}&scope=openid&user_id=${encodeURI(user_info.identities[0].id)}'><i class="fa fa-lock"></i> Изменить пароль</a></li>`
+	);
 	
 	dbList();
 	
