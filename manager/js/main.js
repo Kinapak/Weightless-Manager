@@ -163,3 +163,23 @@ $(document).on("click", "#logout", function(){
 	// Переход на главную сайта
 	location.href = "/";
 });
+
+// Обработка обновления
+$(document).on("click", "#app-update", function(){
+	let $this = $(this);
+	
+	$this.attr("id", "").html("<i class='fa fa-spinner fa-pulse fa-lg'></i>");
+	
+	$.ajax({
+		url: config.domain + "updater.php",
+		type: "POST",
+		success: function(result){
+			if(result != "1") wmAlert(result, "fail"); // Вывод ошибки
+			else location.reload(); // Перезагрузка страницы для применения изменений
+		},
+		error: function(){
+			wmAlert("Модуль обновления не настроен или недоступен.", "fail");
+			$this.attr("id", "app-update").html("Установить");
+		}
+	});
+});

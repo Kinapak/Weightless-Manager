@@ -2423,6 +2423,20 @@ ul li a:focus{
 	cursor: pointer;
 }
 
+.update-screen{
+	width: 500px;
+	height: 350px;
+	background-color: rgba(255, 255, 255, 0.6);
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 30px;
+	text-align: center;
+	font-size: 28px;
+}
+
 /*-----Left menu-------*/
 #left-menu{
 }
