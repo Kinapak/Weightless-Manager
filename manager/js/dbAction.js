@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	
-	let current_db = $("#databases").find("li.active").text(); // Текущая база данных
+	let current_db = $(".databases-list").find("li.active").text(); // Текущая база данных
 	let current_table; // Текущая таблица
 	let dt; // Экземпляр таблицы для DataTable
 	let viewDB; // Текущее представление таблиц в базе данных

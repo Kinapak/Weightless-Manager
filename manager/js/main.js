@@ -48,7 +48,7 @@ setTimeout(function(){
 
 // Загрузка списка баз данных в меню
 function dbList(){
-	let $databases = $("#databases");
+	let $databases = $(".databases-list");
 	
 	$.ajax({
 		url: config.api_db_management + "/list",

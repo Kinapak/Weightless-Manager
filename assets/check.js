@@ -60,9 +60,9 @@ function checkToken(){
 				// Меню настроек
 				if(result.response.settings){
 					$.each(result.response.settings, function(link, name){
-						$("#settings .tree").append("<li><a href='views/" + link + ".html'>" + name + "</a></li>");
+						$(".settings .tree").append("<li><a href='views/" + link + ".html'>" + name + "</a></li>");
 					});
-				} else $("#settings").remove();
+				} else $(".settings").remove();
 				
 				// Удаление прелоадера
 				$(".preloader").fadeOut(300, function(){
