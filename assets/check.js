@@ -15,7 +15,7 @@ let params = window
 
 // Подключение общего конфига приложения и вызов проверки токена
 let config;
-$.getJSON("config.json", function(json){
+$.getJSON("config.json?" + new Date(), function(json){
 	config = json;
 	
 	checkToken(); // Проверка сразу после загрузки страницы
