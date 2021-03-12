@@ -28,6 +28,9 @@ setTimeout(function(){
 		});
 	}
 	
+	// Отображение текущей версии
+	$("#version").text(config.version);
+	
 	// Информация о пользователе
 	let user_info = JSON.parse(localStorage.getItem("user_info"));
 	
