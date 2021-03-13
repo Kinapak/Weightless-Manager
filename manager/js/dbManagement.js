@@ -21,10 +21,10 @@ $(document).ready(function(){
 					let block = '<div class="col-md-6 db-settings">\n' +
 						'\t\t<div class="panel box-v1">\n' +
 						'\t\t\t<div class="panel-heading bg-white border-none">\n' +
-						'\t\t\t\t<div class="col-md-6 col-sm-6 col-xs-6 text-left padding-0">\n' +
+						'\t\t\t\t<div class="col-md-6 col-sm-6 col-xs-10 text-left padding-0">\n' +
 						'\t\t\t\t\t<h4 class="text-left">' + value.name + '</h4>\n' +
 						'\t\t\t\t</div>\n' +
-						'\t\t\t\t<div class="col-md-6 col-sm-6 col-xs-6 text-right">\n' +
+						'\t\t\t\t<div class="col-md-6 col-sm-6 col-xs-2 text-right">\n' +
 						'\t\t\t\t\t<h4>\n' +
 						'\t\t\t\t\t\t<span class="fa fa-database text-right"></span>\n' +
 						'\t\t\t\t\t</h4>\n' +

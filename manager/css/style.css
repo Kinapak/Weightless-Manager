@@ -16,15 +16,12 @@ body{
 	z-index: 9999;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	width: 100%;
 	height: 100%;
 	background-color: #f0f3f4;
 	color: #89d8ca;
 	font-size: 30px;
-}
-
-.preloader i{
-	margin: 0 0 0 45%;
 }
 
 a{
@@ -2418,7 +2415,7 @@ ul li a:focus{
 	cursor: pointer;
 }
 
-#logout{
+.logout{
 	padding: 15px 15px 10px 10px;
 	cursor: pointer;
 }
@@ -6192,7 +6189,7 @@ ul li a:focus{
 	position: fixed;
 	bottom: 20px;
 	outline: none !important;
-	z-index: 9999999;
+	z-index: 9998;
 	display: none
 }
 
@@ -6945,6 +6942,10 @@ ul li a:focus{
 		padding: 0px !important;
 	}
 	
+	.logout{
+		display: none !important;
+	}
+	
 	.responsive-table table,
 	.responsive-table thead,
 	.responsive-table tbody,
@@ -7097,6 +7098,9 @@ ul li a:focus{
 	
 	.nav-wrapper .navbar-header, .nav-wrapper, .navbar-brand{
 		padding-left: 0px !important;
+		padding-right: 0px !important;
+		width: 100%;
+		text-align: center;
 	}
 	
 	.user-nav .user-name,
