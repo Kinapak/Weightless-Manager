@@ -1232,6 +1232,10 @@ ul li a:focus{
 	.card-wrap > div{
 		padding: 0;
 	}
+	
+	.logout{
+		display: none !important;
+	}
 }
 
 .fc{
@@ -6942,10 +6946,6 @@ ul li a:focus{
 		padding: 0px !important;
 	}
 	
-	.logout{
-		display: none !important;
-	}
-	
 	.responsive-table table,
 	.responsive-table thead,
 	.responsive-table tbody,
@@ -7020,19 +7020,6 @@ ul li a:focus{
 	
 	.user-nav li{
 		float: left;
-	}
-	
-	.user-nav .user-name{
-		padding-top: 10px !important;
-	}
-	
-	.user-nav .dropdown{
-		margin-top: -4px !important;
-	}
-	
-	.user-nav .user-dropdown{
-		position: absolute !important;
-		left: -120px !important;
 	}
 }
 
