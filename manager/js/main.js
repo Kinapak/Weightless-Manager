@@ -141,7 +141,7 @@ $(document).on("click", ".tree a", function(e){
 });
 
 // Подгрузка страницы без дерева
-$(document).on("click", ".ripple a:eq(0)", function(e){
+$(document).on("click", ".ripple a", function(e){
 	e.preventDefault();
 	
 	if($(this).parent().find(".tree").length) return false;

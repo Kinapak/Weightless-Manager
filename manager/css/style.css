@@ -1131,22 +1131,22 @@ ul li a:focus{
 }
 
 .dtp-date-view-ripple .ink.animate{
-	-webkit-animation: rippleDate 0.75s linear;
-	-moz-animation: rippleDate 0.75s linear;
-	-ms-animation: rippleDate 0.75s linear;
-	-o-animation: rippleDate 0.75s linear;
-	animation: rippleDate 0.75s linear;
+	-webkit-animation: rippleDate 0.40s linear;
+	-moz-animation: rippleDate 0.40s linear;
+	-ms-animation: rippleDate 0.40s linear;
+	-o-animation: rippleDate 0.40s linear;
+	animation: rippleDate 0.40s linear;
 	background: #2196f3;
 }
 
 /*animation effect*/
 
 .ink.animate{
-	-webkit-animation: ripple 0.75s linear;
-	-moz-animation: ripple 0.75s linear;
-	-ms-animation: ripple 0.75s linear;
-	-o-animation: ripple 0.75s linear;
-	animation: ripple 0.75s linear;
+	-webkit-animation: ripple 0.40s linear;
+	-moz-animation: ripple 0.40s linear;
+	-ms-animation: ripple 0.40s linear;
+	-o-animation: ripple 0.40s linear;
+	animation: ripple 0.40s linear;
 	cursor: pointer;
 }
 
@@ -6221,11 +6221,11 @@ ul li a:focus{
 }
 
 #mimin-mobile.animate{
-	-webkit-animation: mobile-menubg 0.75s linear;
-	-moz-animation: mobile-menubg 0.75s linear;
-	-ms-animation: mobile-menubg 0.75s linear;
-	-o-animation: mobile-menubg 0.75s linear;
-	animation: mobile-menubg 0.75s linear;
+	-webkit-animation: mobile-menubg 0.40s linear;
+	-moz-animation: mobile-menubg 0.40s linear;
+	-ms-animation: mobile-menubg 0.40s linear;
+	-o-animation: mobile-menubg 0.40s linear;
+	animation: mobile-menubg 0.40s linear;
 }
 
 #mimin-mobile .ink{
@@ -6233,27 +6233,27 @@ ul li a:focus{
 }
 
 #mimin-mobile .ink.animate{
-	-webkit-animation: ripple-mobile 0.75s linear;
-	-moz-animation: ripple-mobile 0.75s linear;
-	-ms-animation: ripple-mobile 0.75s linear;
-	-o-animation: ripple-mobile 0.75s linear;
-	animation: ripple-mobile 0.75s linear;
+	-webkit-animation: ripple-mobile 0.40s linear;
+	-moz-animation: ripple-mobile 0.40s linear;
+	-ms-animation: ripple-mobile 0.40s linear;
+	-o-animation: ripple-mobile 0.40s linear;
+	animation: ripple-mobile 0.40s linear;
 }
 
 #mimin-mobile.reverse.animate{
-	-webkit-animation: mobile-menubg-reverse 0.75s linear !important;
-	-moz-animation: mobile-menubg-reverse 0.75s linear !important;
-	-ms-animation: mobile-menubg-reverse 0.75s linear !important;
-	-o-animation: mobile-menubg-reverse 0.75s linear !important;
-	animation: mobile-menubg-reverse 0.75s linear !important;
+	-webkit-animation: mobile-menubg-reverse 0.40s linear !important;
+	-moz-animation: mobile-menubg-reverse 0.40s linear !important;
+	-ms-animation: mobile-menubg-reverse 0.40s linear !important;
+	-o-animation: mobile-menubg-reverse 0.40s linear !important;
+	animation: mobile-menubg-reverse 0.40s linear !important;
 }
 
 #mimin-mobile.reverse .ink.animate{
-	-webkit-animation: ripple-mobile-reverse 0.75s linear !important;
-	-moz-animation: ripple-mobile-reverse 0.75s linear !important;
-	-ms-animation: ripple-mobile-reverse 0.75s linear !important;
-	-o-animation: ripple-mobile-reverse 0.75s linear !important;
-	animation: ripple-mobile-reverse 0.75s linear !important;
+	-webkit-animation: ripple-mobile-reverse 0.40s linear !important;
+	-moz-animation: ripple-mobile-reverse 0.40s linear !important;
+	-ms-animation: ripple-mobile-reverse 0.40s linear !important;
+	-o-animation: ripple-mobile-reverse 0.40s linear !important;
+	animation: ripple-mobile-reverse 0.40s linear !important;
 }
 
 @keyframes ripple-mobile-reverse{

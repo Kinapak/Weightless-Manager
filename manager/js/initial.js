@@ -211,11 +211,11 @@
 				left: x + 'px',
 			}).addClass("animate");
 			
-			rippler.css({'z-index': 9999});
+			rippler.css({'z-index': 9998});
 			rippler.animate({
 				backgroundColor: "#ff6656",
 				width: '100%'
-			}, 750);
+			}, 400);
 			
 			$("#mimin-mobile .ink").on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd",
 				function(e){
@@ -243,7 +243,7 @@
 			rippler.animate({
 				backgroundColor: "transparent",
 				'z-index': '-1'
-			}, 750);
+			}, 400);
 			
 			$("#mimin-mobile .ink").on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd",
 				function(e){

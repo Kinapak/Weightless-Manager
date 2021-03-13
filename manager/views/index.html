@@ -42,6 +42,6 @@
 
 <script type="text/javascript">
 	setTimeout(function(){
-		$("#index-db-count").text($(".databases-list li").length);
+		$("#index-db-count").text($(".databases-list:eq(0) li").length);
 	}, 500);
 </script>
