@@ -39,6 +39,9 @@ setTimeout(function(){
 	$(".user-name ul").append(
 		`<li><a href='https://eu-gb.appid.cloud.ibm.com/oauth/v4/${config.tenant}/authorization?response_type=change_password&client_id=${config.app_id}&redirect_uri=${encodeURI(config.domain)}&scope=openid&user_id=${encodeURI(user_info.identities[0].id)}'><i class="fa fa-lock"></i> Изменить пароль</a></li>`
 	);
+	$("#user-mobile").prepend(
+		`<li><a data-noview="true" href='https://eu-gb.appid.cloud.ibm.com/oauth/v4/${config.tenant}/authorization?response_type=change_password&client_id=${config.app_id}&redirect_uri=${encodeURI(config.domain)}&scope=openid&user_id=${encodeURI(user_info.identities[0].id)}'>Изменить пароль</a></li>`
+	);
 	
 	dbList();
 	
@@ -48,7 +51,9 @@ setTimeout(function(){
 
 // Загрузка списка баз данных в меню
 function dbList(){
-	let $databases = $(".databases-list");
+	let $databases;
+	if(screen.width > 479) $databases = $(".databases-list:eq(0)");
+	else $databases = $(".databases-list:eq(1)");
 	
 	$.ajax({
 		url: config.api_db_management + "/list",
@@ -130,6 +135,12 @@ function loadView(href, title){
 
 // Подгрузка страницы по клику в дереве
 $(document).on("click", ".tree a", function(e){
+	// Если есть data-noview="true", то ссылка является внешней
+	if($(this).data("noview")){
+		location.href = $(this).attr("href");
+		return false;
+	}
+	
 	e.preventDefault();
 	
 	loadView($(this).attr("href"), $(this).text());
@@ -142,8 +153,15 @@ $(document).on("click", ".tree a", function(e){
 
 // Подгрузка страницы без дерева
 $(document).on("click", ".ripple a", function(e){
+	// Если есть data-noview="true", то ссылка является внешней
+	if($(this).data("noview")){
+		location.href = $(this).attr("href");
+		return false;
+	}
+	
 	e.preventDefault();
 	
+	// Проверяем, есть ли дерево
 	if($(this).parent().find(".tree").length) return false;
 	
 	loadView($(this).attr("href"), $(this).text());
