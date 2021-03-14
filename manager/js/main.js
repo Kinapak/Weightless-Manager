@@ -1,4 +1,15 @@
 setTimeout(function(){
+	// Регистрация Service Worker
+	if('serviceWorker' in navigator){
+		navigator.serviceWorker.register('sw.js', {"scope": config.domain})
+			.then((register) => {
+				if(!register.active) return; // Возврат, если еще не активирован
+				console.log("Registered");
+			}).catch((error) => {
+			console.log('Registration failed with ' + error);
+		});
+	}
+	
 	// Проверка кода из IBM
 	if(params["code"]){
 		$.ajax({
