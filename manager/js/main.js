@@ -123,9 +123,9 @@ function loadView(href, title){
 	checkToken();
 	
 	// Подгрузка страницы. Если нет страницы, вывод 404
-	$("#main-view").load("https://russiabase.ru/wm/v0.3.2/manager/" + href, function(response, status, xhr){
+	$("#main-view").load("https://russiabase.ru/wm/v0.4.0/manager/" + href, function(response, status, xhr){
 		if(status == "error"){
-			$("#main-view").load("https://russiabase.ru/wm/v0.3.2/manager/views/404.html");
+			$("#main-view").load("https://russiabase.ru/wm/v0.4.0/manager/views/404.html");
 			wmAlert("Элемент не найден", "fail");
 		}
 	});
