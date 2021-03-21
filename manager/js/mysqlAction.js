@@ -7,7 +7,7 @@ $(document).ready(function(){
 	
 	// Отображение таблиц базы данных при загрузке страницы
 	$.ajax({
-		url: config.api_db_action + "/tables",
+		url: config.api_db_mysql + "/tables",
 		type: "POST",
 		dataType: "json",
 		headers: {
@@ -81,7 +81,7 @@ $(document).ready(function(){
 			let limit = 10000; // Лимит на кол-во запрашиваемых строк для разделения запросов
 			
 			$.ajax({
-				url: config.api_db_action + "/table",
+				url: config.api_db_mysql + "/table",
 				type: "POST",
 				dataType: "json",
 				headers: {
@@ -197,7 +197,7 @@ $(document).ready(function(){
 					// Рекурсивная функция получения следующих частей данных из таблицы
 					function next(lim){
 						$.ajax({
-							url: config.api_db_action + "/table",
+							url: config.api_db_mysql + "/table",
 							type: "POST",
 							dataType: "json",
 							headers: {
@@ -256,7 +256,7 @@ $(document).ready(function(){
 			
 			// Отправка изменений
 			$.ajax({
-				url: config.api_db_action + "/update",
+				url: config.api_db_mysql + "/update",
 				type: "POST",
 				dataType: "json",
 				headers: {
@@ -339,7 +339,7 @@ $(document).ready(function(){
 			});
 			
 			$.ajax({
-				url: config.api_db_action + "/insert",
+				url: config.api_db_mysql + "/insert",
 				type: "POST",
 				dataType: "json",
 				headers: {
@@ -383,7 +383,7 @@ $(document).ready(function(){
 		
 		// Удаление строки из таблицы БД
 		$.ajax({
-			url: config.api_db_action + "/remove",
+			url: config.api_db_mysql + "/remove",
 			type: "POST",
 			dataType: "json",
 			headers: {
@@ -416,7 +416,7 @@ $(document).ready(function(){
 		
 		// Удаление таблицы из БД
 		$.ajax({
-			url: config.api_db_action + "/dropTable",
+			url: config.api_db_mysql + "/dropTable",
 			type: "POST",
 			dataType: "json",
 			headers: {
@@ -449,7 +449,7 @@ $(document).ready(function(){
 		
 		// Очистка таблицы
 		$.ajax({
-			url: config.api_db_action + "/truncateTable",
+			url: config.api_db_mysql + "/truncateTable",
 			type: "POST",
 			dataType: "json",
 			headers: {
@@ -571,7 +571,7 @@ $(document).ready(function(){
 			});
 			
 			$.ajax({
-				url: config.api_db_action + "/addTable",
+				url: config.api_db_mysql + "/addTable",
 				type: "POST",
 				dataType: "json",
 				headers: {

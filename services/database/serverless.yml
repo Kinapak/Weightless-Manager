@@ -1,4 +1,4 @@
-service: database
+service: DBManagement
 configValidationMode: off
 
 provider:
@@ -8,84 +8,29 @@ provider:
 functions:
   addDB:
     handler: management.addDB
-    name: database/addDB
+    name: DBManagement/addDB
     events:
-      - http: POST database/addDB
+      - http: POST DBManagement/addDB
   deleteDB:
     handler: management.deleteDB
-    name: database/deleteDB
+    name: DBManagement/deleteDB
     events:
-      - http: POST database/deleteDB
+      - http: POST DBManagement/deleteDB
   getDBList:
     handler: management.getDBList
-    name: database/getDBList
+    name: DBManagement/getDBList
     events:
-      - http: POST database/listDB
+      - http: POST DBManagement/listDB
   getDBSettings:
     handler: management.getDBSettings
-    name: database/getDBSettings
+    name: DBManagement/getDBSettings
     events:
-      - http: POST database/listDBSettings
+      - http: POST DBManagement/listDBSettings
   getPublicKey:
     handler: management.getPublicKey
-    name: database/getPublicKey
+    name: DBManagement/getPublicKey
     events:
-      - http: POST database/publicKey
-
-  getDBTables:
-    handler: action.getDBTables
-    name: database/getDBTables
-    events:
-      - http: POST database/tables
-  getTable:
-    handler: action.getTable
-    name: database/getTable
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/table
-  addTable:
-    handler: action.addTable
-    name: database/addTable
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/addTable
-  dropTable:
-    handler: action.dropTable
-    name: database/dropTable
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/dropTable
-  truncateTable:
-    handler: action.truncateTable
-    name: database/truncateTable
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/truncateTable
-  tableUpdate:
-    handler: action.tableUpdate
-    name: database/tableUpdate
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/update
-  tableInsert:
-    handler: action.tableInsert
-    name: database/tableInsert
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/insert
-  rowRemove:
-    handler: action.rowRemove
-    name: database/rowRemove
-    memory: 2048
-    timeout: 600
-    events:
-      - http: POST database/remove
+      - http: POST DBManagement/publicKey
 
 plugins:
   - serverless-openwhisk

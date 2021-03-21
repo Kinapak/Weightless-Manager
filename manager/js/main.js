@@ -152,7 +152,7 @@ $(document).on("click", ".tree a", function(e){
 });
 
 // Подгрузка страницы без дерева
-$(document).on("click", ".ripple a", function(e){
+$(document).on("click", ".ripple a:eq(0)", function(e){
 	// Если есть data-noview="true", то ссылка является внешней
 	if($(this).data("noview")){
 		location.href = $(this).attr("href");

@@ -1,0 +1,65 @@
+service: MySQL
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  getDBTables:
+    handler: action.getDBTables
+    name: MySQL/getDBTables
+    events:
+      - http: POST MySQL/tables
+  getTable:
+    handler: action.getTable
+    name: MySQL/getTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/table
+  addTable:
+    handler: action.addTable
+    name: MySQL/addTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/addTable
+  dropTable:
+    handler: action.dropTable
+    name: MySQL/dropTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/dropTable
+  truncateTable:
+    handler: action.truncateTable
+    name: MySQL/truncateTable
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/truncateTable
+  tableUpdate:
+    handler: action.tableUpdate
+    name: MySQL/tableUpdate
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/update
+  tableInsert:
+    handler: action.tableInsert
+    name: MySQL/tableInsert
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/insert
+  rowRemove:
+    handler: action.rowRemove
+    name: MySQL/rowRemove
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST MySQL/remove
+
+plugins:
+  - serverless-openwhisk
