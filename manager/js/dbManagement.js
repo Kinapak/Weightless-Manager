@@ -49,17 +49,17 @@ $(document).ready(function(){
 						'\t\t\t\t\t\t<label>Порт</label>\n' +
 						'\t\t\t\t\t</div>\n' +
 						'\t\t\t\t\t<div class="form-group form-animate-text">\n' +
-						'\t\t\t\t\t\t<input type="text" name="user" class="form-text" value="' + value.user + '" required>\n' +
+						'\t\t\t\t\t\t<input type="text" name="user" class="form-text" value="' + value.user + '">\n' +
 						'\t\t\t\t\t\t<span class="bar"></span>\n' +
 						'\t\t\t\t\t\t<label>Пользователь</label>\n' +
 						'\t\t\t\t\t</div>\n' +
 						'\t\t\t\t\t<div class="form-group form-animate-text">\n' +
-						'\t\t\t\t\t\t<input type="password" name="password" class="form-text" value="" required>\n' +
+						'\t\t\t\t\t\t<input type="password" name="password" class="form-text" value="">\n' +
 						'\t\t\t\t\t\t<span class="bar"></span>\n' +
 						'\t\t\t\t\t\t<label>Пароль</label>\n' +
 						'\t\t\t\t\t</div>\n' +
 						'\t\t\t\t\t<div class="form-group form-animate-text">\n' +
-						'\t\t\t\t\t\t<input type="text" name="db" class="form-text" value="' + value.db + '" required>\n' +
+						'\t\t\t\t\t\t<input type="text" name="db" class="form-text" value="' + value.db + '">\n' +
 						'\t\t\t\t\t\t<span class="bar"></span>\n' +
 						'\t\t\t\t\t\t<label>База данных</label>\n' +
 						'\t\t\t\t\t</div>\n' +
@@ -67,6 +67,7 @@ $(document).ready(function(){
 						'\t\t\t\t\t\t<select name="type" class="form-control" required>\n' +
 						'\t\t\t\t\t\t\t<option value="0" disabled>Тип базы данных</option>\n' +
 						'\t\t\t\t\t\t\t<option value="mysql">MySQL</option>\n' +
+						'\t\t\t\t\t\t\t<option value="redis">Redis</option>\n' +
 						'\t\t\t\t\t\t</select>\n' +
 						'\t\t\t\t\t</div>\n' +
 						'\t\t\t\t\t<button type="submit" class="btn btn-round btn-primary" style="float: left;">Изменить</button>\n' +

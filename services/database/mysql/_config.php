@@ -1,6 +1,5 @@
 <?php
 	$cloudant_url = "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/";
-	$db_type_list = array("mysql", "mongodb");
 	
 	$to_decrypt = ["user", "password", "db"]; // Поля для дешифрования
 	
