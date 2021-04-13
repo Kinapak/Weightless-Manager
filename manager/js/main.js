@@ -1,3 +1,5 @@
+let db_type; // Тип текущей базы данных
+
 setTimeout(function(){
 	// Проверка кода из IBM
 	if(params["code"]){
@@ -72,7 +74,7 @@ function dbList(){
 			if(!result.databases) return false;
 			
 			$.each(result.databases, function(id, val){
-				$databases.append("<li><a href='views/database.html'>" + id + "</a></li>");
+				$databases.append("<li><a href='views/database.html' data-dbtype='" + val.type + "'>" + id + "</a></li>");
 			});
 			
 			if($databases.parent().children(".tree").css("display") == "none")
@@ -143,6 +145,9 @@ $(document).on("click", ".tree a", function(e){
 	
 	e.preventDefault();
 	
+	// Установка типа базы данных, если выполнен переход к БД
+	if($(this).data("dbtype")) db_type = $(this).data("dbtype");
+	
 	loadView($(this).attr("href"), $(this).text());
 	
 	$(".ripple a").removeClass("active");
@@ -160,6 +165,9 @@ $(document).on("click", ".ripple a:eq(0)", function(e){
 	}
 	
 	e.preventDefault();
+	
+	// Установка типа базы данных, если выполнен переход к БД
+	if($(this).data("dbtype")) db_type = $(this).data("dbtype");
 	
 	// Проверяем, есть ли дерево
 	if($(this).parent().find(".tree").length) return false;

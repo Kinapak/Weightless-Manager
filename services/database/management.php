@@ -90,7 +90,7 @@
 		$document = getDocument($token["iam-token"], "app_db", $origin[1]);
 		$document = $document["document"];
 		foreach($document["databases"] as $id => $val)
-			$databases[$val["name"]] = $val["name"];
+			$databases[$val["name"]] = ["name" => $val["name"], "type" => $val["type"]];
 		return ["databases" => $databases];
 	}
 	
