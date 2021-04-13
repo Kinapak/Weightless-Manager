@@ -1,0 +1,58 @@
+<?php
+	require_once("vendor/predis/predis/autoload.php");
+	require_once("_config.php");
+	
+	// Получение всех ключей в базе данных
+	function getKeys(array $args): array{
+		// Получение всех таблиц в БД или вывод ошибки
+		$client = connect($args);
+		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		
+		$keys = $client->keys("*");
+		if(!$keys) return ["empty" => ["Ключ" => "База данных пуста.", "Значение" => ""]];
+		
+		foreach($keys as $key)
+			$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];
+		
+		return ["keys" => $keys_list];
+	}
+	
+	// Подключение к базе данных Redis
+	function connect(array $args){
+		global $to_decrypt;
+		
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		
+		// Получение приватного ключа из настроек приложения
+		$app = getDocument($args["iam-token"], "applications", $origin[1]);
+		$private_key = $app["document"]["keys"]["private_key"];
+		
+		// Получение базы данных из настроек
+		$document = getDocument($args["iam-token"], "app_db", $origin[1]);
+		$document = $document["document"];
+		$db = $document["databases"][$args["db"]]; // Массив с параметрами запрашиваемой базы данных
+		
+		// Дешифрование параметров для подключения
+		foreach($to_decrypt as $field){
+			openssl_private_decrypt(base64_decode($db[$field]), $decrypted, openssl_get_privatekey($private_key));
+			$db[$field] = $decrypted;
+		}
+		
+		// Подключение и проверка корректности подключения
+		$client = new Predis\Client(
+		 array(
+		  "scheme" => "tcp",
+		  "host" => $db["remote"],
+		  "port" => $db["port"]
+		 ),
+		 array(
+		  "parameters" => [
+			"password" => $db["password"],
+			"database" => empty($db["db"]) ? 0 : $db["db"]
+		  ]
+		 )
+		);
+		if(!$client) return ["response" => ["error" => "Ошибка подключения"]];
+		
+		return $client;
+	}
