@@ -4,7 +4,7 @@
 	
 	// Получение всех ключей в базе данных
 	function getKeys(array $args): array{
-		// Получение всех таблиц в БД или вывод ошибки
+		// Получение клиента Redis или вывод ошибки
 		$client = connect($args);
 		if(is_array($client)) return ["error" => $client["response"]["error"]];
 		
@@ -15,6 +15,20 @@
 			$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];
 		
 		return ["keys" => $keys_list];
+	}
+	
+	// Создание нового ключа
+	function setKey(array $args): array{
+		// Получение клиента Redis или вывод ошибки
+		$client = connect($args);
+		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		
+		// Обработка и добавление ключа
+		$args["keys"] = json_decode($args["keys"], true);
+		if(!$client->set($args["keys"]["Ключ"], $args["keys"]["Значение"]))
+			return ["error" => "Ошибка добавления ключа"];
+		
+		return ["response" => "Success"];
 	}
 	
 	// Подключение к базе данных Redis

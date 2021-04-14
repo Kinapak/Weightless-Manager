@@ -17,8 +17,8 @@ $(document).ready(function(){
 		},
 		success: function(result){
 			// Вывод ошибки
-			if(result.response){
-				wmAlert(result.response.error, "fail");
+			if(result.error){
+				wmAlert(result.error, "fail");
 				return false;
 			}
 			
@@ -53,12 +53,97 @@ $(document).ready(function(){
 			
 			$('#db-view tbody').attr("data-type", "keys");
 			
+			// Кнопка добавления нового ключа
+			setTimeout(function(){
+				$(".dataTables_length").append(
+					"<span id='set-key' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; margin-left: 10px;'>" +
+					"Добавить ключ" +
+					"</span>"
+				);
+			}, 100);
+			
 			$("#db-loading").css("display", "none");
 		},
 		error: function(error){
 			wmAlert("Ошибка подключения", "fail");
 			console.log(error);
 		}
+	});
+	
+	// Обработка нового ключа
+	$(".responsive-table").on("click", "#set-key", function(){
+		// Повторное нажатие закрывает добавление ключа
+		if($("#new-key").length){
+			$("#new-key").parent().remove();
+			return false;
+		}
+		
+		// Добавление строки для новых значений над таблицей
+		$(this).closest(".row").append(
+			"<div class='col-sm-12'>" +
+			"<table id='new-key' class='table table-bordered dataTable'><tr></tr></table>" +
+			"<button id='add-key' class='btn btn-round btn-primary' style='transform: scale(0.9);'>Добавить</button>" +
+			"</div>"
+		);
+		
+		// Добавление новых ячеек с шириной, как в таблице
+		$("#db-view th").each(function(){
+			$("#new-key tr").append(
+				"<td style='width: " + $(this).css("width") + ";' contenteditable='true' data-parent='" + $(this).text() + "'></td>"
+			);
+		});
+		
+		// Сразу фокусировка на первом поле
+		$("#new-key tr td:eq(0)").focus();
+		
+		// Отправка новых данных
+		$("#new-key").parent().on("click", "#add-key", function(){
+			let $this = $(this);
+			
+			// Отображение загрузки и блокировка кнопки
+			$(this).html("<i class='fa fa-spinner fa-pulse fa-lg'></i>");
+			$(this).attr("id", "");
+			
+			// Инициализация новых значений
+			let keys = {};
+			$("#new-key tr td").each(function(){
+				keys[$(this).data("parent")] = $(this).text();
+			});
+			
+			$.ajax({
+				url: config.api_db_redis + "/set",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"db": current_db,
+					"keys": JSON.stringify(keys),
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					// Вывод ошибки
+					if(result.error){
+						wmAlert(result.error, "fail");
+						$this.html("Добавить");
+						$this.attr("id", "add-key");
+						return false;
+					}
+					
+					// Добавление новой строки к таблице
+					dt.rows.add([keys]).draw();
+					
+					$this.parent().remove();
+				},
+				error: function(error){
+					$this.html("Добавить");
+					$this.attr("id", "add-key");
+					wmAlert("Ошибка подключения", "fail");
+					console.log(error);
+				}
+			});
+		});
 	});
 	
 });
