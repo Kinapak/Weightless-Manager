@@ -16,6 +16,11 @@ functions:
     name: Redis/setKey
     events:
       - http: POST Redis/setKey
+  delKey:
+    handler: action.delKey
+    name: Redis/delKey
+    events:
+      - http: POST Redis/delKey
 
 plugins:
   - serverless-openwhisk

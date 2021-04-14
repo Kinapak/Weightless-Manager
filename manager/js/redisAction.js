@@ -60,6 +60,11 @@ $(document).ready(function(){
 					"Добавить ключ" +
 					"</span>"
 				);
+				
+				// Кнопка удаления ключа
+				$.each($("tbody tr"), function(){
+					$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить ключ'></i>");
+				});
 			}, 100);
 			
 			$("#db-loading").css("display", "none");
@@ -143,6 +148,42 @@ $(document).ready(function(){
 					console.log(error);
 				}
 			});
+		});
+	});
+	
+	// Удаление ключа
+	$(".responsive-table").on("click", ".remove-row", function(){
+		if(!confirm("Подтвердите удаление")) return false;
+		
+		$(this).removeClass("fa-close").addClass("fa-spinner fa-pulse");
+		let $this = $(this);
+		
+		// Удаление строки из таблицы БД
+		$.ajax({
+			url: config.api_db_redis + "/del",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"key": $this.parent().text(),
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				// Удаление строки из таблицы на клиенте
+				$this.parent().parent().remove();
+			},
+			error: function(error){
+				wmAlert("Ошибка подключения", "fail");
+				console.log(error);
+			}
 		});
 	});
 	

@@ -31,6 +31,18 @@
 		return ["response" => "Success"];
 	}
 	
+	// Удаление ключа
+	function delKey(array $args): array{
+		// Получение клиента Redis или вывод ошибки
+		$client = connect($args);
+		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		
+		// Удаление ключа
+		$client->del($args["key"]);
+		
+		return ["response" => "Success"];
+	}
+	
 	// Подключение к базе данных Redis
 	function connect(array $args){
 		global $to_decrypt;
