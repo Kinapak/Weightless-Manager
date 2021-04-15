@@ -18,6 +18,25 @@
 	}
 	
 	// Создание нового ключа
+	function update(array $args): array{
+		// Получение клиента Redis или вывод ошибки
+		$client = connect($args);
+		if(is_array($client)) return ["response" => ["error" => $client["response"]["error"]]];
+		
+		// Если изменяется имя ключа, и новое имя уже существует, выводим ошибку
+		if(strlen($args["old_key"]) > 0 and $client->exists($args["key"]))
+			return ["response" => ["error" => "Данный ключ уже существует, воспользуйтесь поиском"]];
+		
+		// Если было изменено имя ключа, удаляем старое
+		if(strlen($args["old_key"]) > 0) $client->del($args["old_key"]);
+		
+		// Создание нового или редактирование существующего ключа
+		$client->set($args["key"], $args["value"]);
+		
+		return ["response" => "Success"];
+	}
+	
+	// Создание нового ключа
 	function setKey(array $args): array{
 		// Получение клиента Redis или вывод ошибки
 		$client = connect($args);

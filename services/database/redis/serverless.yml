@@ -11,6 +11,11 @@ functions:
     name: Redis/getKeys
     events:
       - http: POST Redis/getKeys
+  update:
+    handler: action.update
+    name: Redis/update
+    events:
+      - http: POST Redis/update
   setKey:
     handler: action.setKey
     name: Redis/setKey

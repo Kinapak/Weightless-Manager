@@ -75,6 +75,72 @@ $(document).ready(function(){
 		}
 	});
 	
+	// Обновление выбранного значения
+	$("#db-view").on("dblclick", "tbody[data-type='keys'] td", function(){
+		$(this).attr("contentEditable", true);
+		$(this).focus();
+		
+		// Если было изменено имя ключа, запоминаем старое для удаления
+		let old_key;
+		if($(this).index() === 0) old_key = $(this).text();
+		
+		// Подготовка значений для проверки изменений
+		let changed, last = $(this).text();
+		let $this = $(this);
+		
+		function update(){
+			changed = $this.text();
+			$this.attr("contentEditable", false);
+			
+			// Если значение не менялось, выход из функции
+			if(changed === last) return false;
+			
+			// Сборка ключ-значение
+			let key = $this.parent().find("td:eq(0)").text();
+			let value = $this.parent().find("td:eq(1)").text();
+			
+			// Отправка изменений
+			$.ajax({
+				url: config.api_db_redis + "/update",
+				type: "POST",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + localStorage.getItem("user_token")
+				},
+				data: {
+					"db": current_db,
+					"old_key": old_key,
+					"key": key,
+					"value": value,
+					"iam-token": localStorage.getItem("IAM_token")
+				},
+				success: function(result){
+					if(result.response.error) wmAlert(result.response.error, "fail");
+				}
+			});
+		}
+		
+		// Обновление данных по нажатию клавиши enter
+		$this.keydown(function(e){
+			if(e.keyCode === 13){
+				// Если нет редактируемого поля или клик был совершен по нему, выход из функции
+				if(!$this) return false;
+				
+				update();
+				$this = null; // Устранение дублей
+			}
+		});
+		
+		// Обновление данных по клику вне блока
+		$(document).click(function(e){
+			// Если нет редактируемого поля или клик был совершен по нему, выход из функции
+			if(!$this || $this.is(e.target)) return false;
+			
+			update();
+			$this = null; // Устранение дублей
+		});
+	});
+	
 	// Обработка нового ключа
 	$(".responsive-table").on("click", "#set-key", function(){
 		// Повторное нажатие закрывает добавление ключа
