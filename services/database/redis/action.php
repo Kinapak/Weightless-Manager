@@ -9,7 +9,7 @@
 		if(is_array($client)) return ["response" => ["error" => $client["response"]["error"]]];
 		
 		$keys = $client->keys("*");
-		if(!$keys) return ["empty" => ["Ключ" => "База данных пуста.", "Значение" => ""]];
+		if(!$keys) return ["response" => ["empty" => ["Ключ" => "База данных пуста.", "Значение" => ""]]];
 		
 		foreach($keys as $key)
 			$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];

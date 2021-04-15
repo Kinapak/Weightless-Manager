@@ -44,7 +44,7 @@ $(document).ready(function(){
 						title: "Значение"
 					}
 				],
-				data: result.response.keys || [result.empty],
+				data: result.response.keys,
 				pageLength: 50,
 				language: {
 					url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
@@ -62,9 +62,10 @@ $(document).ready(function(){
 				);
 				
 				// Кнопка удаления ключа
-				$.each($("tbody tr"), function(){
-					$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить ключ'></i>");
-				});
+				if(!result.response.empty)
+					$.each($("tbody tr"), function(){
+						$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить ключ'></i>");
+					});
 			}, 100);
 			
 			$("#db-loading").css("display", "none");
