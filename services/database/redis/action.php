@@ -11,8 +11,12 @@
 		$keys = $client->keys("*");
 		if(!$keys) return ["response" => ["empty" => ["Ключ" => "База данных пуста.", "Значение" => ""]]];
 		
-		foreach($keys as $key)
-			$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];
+		foreach($keys as $key){
+			try{
+				$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];
+			} catch(Predis\Response\ServerException $ex){
+			}
+		}
 		
 		return ["response" => ["keys" => $keys_list]];
 	}
