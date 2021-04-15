@@ -139,6 +139,12 @@ $(document).ready(function(){
 					// Добавление новой строки к таблице
 					dt.rows.add([keys]).draw();
 					
+					// Заново добавляем кнопку удаления ключа, в т.ч. и новой строке
+					$(".remove-row").remove();
+					$.each($("tbody tr"), function(){
+						$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить ключ'></i>");
+					});
+					
 					$this.parent().remove();
 				},
 				error: function(error){
