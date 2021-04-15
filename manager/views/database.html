@@ -16,9 +16,9 @@
 <script type="text/javascript">
 	// Задержка для успешной подгрузки jQuery
 	setTimeout(function(){
-		$("body").append(
-			"<scr"+"ipt src=\"https://russiabase.ru/wm/v0.4.0/manager/js/plugins/datatables.bootstrap.min.js\"></scr"+"ipt>"
+		$("#main-view").append(
+			"<scr"+"ipt src=\"https://russiabase.ru/wm/v0.4.0/manager/js/plugins/datatables.bootstrap.min.js\"></scr"+"ipt>",
+			"<scr"+"ipt src=\"https://russiabase.ru/wm/v0.4.0/manager/js/" + db_type + "Action.js\"></scr"+"ipt>"
 		);
 	}, 300);
 </script>
-<script src="https://russiabase.ru/wm/v0.4.0/manager/js/mysqlAction.js"></script>

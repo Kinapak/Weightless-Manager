@@ -1,0 +1,31 @@
+service: Redis
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  getKeys:
+    handler: action.getKeys
+    name: Redis/getKeys
+    events:
+      - http: POST Redis/getKeys
+  update:
+    handler: action.update
+    name: Redis/update
+    events:
+      - http: POST Redis/update
+  setKey:
+    handler: action.setKey
+    name: Redis/setKey
+    events:
+      - http: POST Redis/setKey
+  delKey:
+    handler: action.delKey
+    name: Redis/delKey
+    events:
+      - http: POST Redis/delKey
+
+plugins:
+  - serverless-openwhisk
