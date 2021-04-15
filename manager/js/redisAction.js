@@ -17,8 +17,8 @@ $(document).ready(function(){
 		},
 		success: function(result){
 			// Вывод ошибки
-			if(result.error){
-				wmAlert(result.error, "fail");
+			if(result.response.error){
+				wmAlert(result.response.error, "fail");
 				return false;
 			}
 			
@@ -44,7 +44,7 @@ $(document).ready(function(){
 						title: "Значение"
 					}
 				],
-				data: result.keys || [result.empty],
+				data: result.response.keys || [result.empty],
 				pageLength: 50,
 				language: {
 					url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
@@ -129,8 +129,8 @@ $(document).ready(function(){
 				},
 				success: function(result){
 					// Вывод ошибки
-					if(result.error){
-						wmAlert(result.error, "fail");
+					if(result.response.error){
+						wmAlert(result.response.error, "fail");
 						$this.html("Добавить");
 						$this.attr("id", "add-key");
 						return false;
@@ -172,7 +172,7 @@ $(document).ready(function(){
 				"iam-token": localStorage.getItem("IAM_token")
 			},
 			success: function(result){
-				if(result.error){
+				if(result.response.error){
 					wmAlert(result.response.error, "fail");
 					return false;
 				}

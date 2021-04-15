@@ -6,7 +6,7 @@
 	function getKeys(array $args): array{
 		// Получение клиента Redis или вывод ошибки
 		$client = connect($args);
-		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		if(is_array($client)) return ["response" => ["error" => $client["response"]["error"]]];
 		
 		$keys = $client->keys("*");
 		if(!$keys) return ["empty" => ["Ключ" => "База данных пуста.", "Значение" => ""]];
@@ -14,19 +14,24 @@
 		foreach($keys as $key)
 			$keys_list[] = ["Ключ" => $key, "Значение" => $client->get($key)];
 		
-		return ["keys" => $keys_list];
+		return ["response" => ["keys" => $keys_list]];
 	}
 	
 	// Создание нового ключа
 	function setKey(array $args): array{
 		// Получение клиента Redis или вывод ошибки
 		$client = connect($args);
-		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		if(is_array($client)) return ["response" => ["error" => $client["response"]["error"]]];
 		
-		// Обработка и добавление ключа
 		$args["keys"] = json_decode($args["keys"], true);
+		
+		// Если ключ уже существует, выводим ошибку
+		if($client->exists($args["keys"]["Ключ"]))
+			return ["response" => ["error" => "Данный ключ уже существует, воспользуйтесь поиском"]];
+		
+		// Добавление ключа
 		if(!$client->set($args["keys"]["Ключ"], $args["keys"]["Значение"]))
-			return ["error" => "Ошибка добавления ключа"];
+			return ["response" => ["error" => "Ошибка добавления ключа"]];
 		
 		return ["response" => "Success"];
 	}
@@ -35,7 +40,7 @@
 	function delKey(array $args): array{
 		// Получение клиента Redis или вывод ошибки
 		$client = connect($args);
-		if(is_array($client)) return ["error" => $client["response"]["error"]];
+		if(is_array($client)) return ["response" => ["error" => $client["response"]["error"]]];
 		
 		// Удаление ключа
 		$client->del($args["key"]);
