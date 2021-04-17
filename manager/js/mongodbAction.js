@@ -5,69 +5,76 @@ $(document).ready(function(){
 	let dt; // Экземпляр таблицы для DataTable
 	
 	// Отображение коллекций базы данных при загрузке страницы
-	$.ajax({
-		url: config.api_db_mongodb + "/collections",
-		type: "POST",
-		dataType: "json",
-		headers: {
-			"Authorization": "Bearer " + localStorage.getItem("user_token")
-		},
-		data: {
-			"db": current_db,
-			"iam-token": localStorage.getItem("IAM_token")
-		},
-		success: function(result){
-			// Вывод ошибки
-			if(result.response.error){
-				wmAlert(result.response.error, "fail");
-				return false;
-			}
-			
-			// Если уже инициализирован экземпляр таблицы, необходимо его удалить
+	function viewDB(){
+		// Если уже инициализирован экземпляр таблицы, необходимо его удалить
+		if($("#db-loading").css("display") == "none"){
 			if(dt){
 				dt.destroy();
 				$('#db-view').html("");
 			}
-			
-			// Установка названия текущей БД в заголовках
-			$("#db-name").html("<span>" + current_db + "</span>");
-			$("title").text("Weightless Manager | " + current_db);
-			
-			// Отображение коллекций
-			dt = $('#db-view').DataTable({
-				columns: [
-					{
-						data: "Коллекции",
-						title: "Коллекции"
-					}
-				],
-				data: result.response.collections,
-				paging: false,
-				language: {
-					url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
-				}
-			});
-			
-			$('#db-view tbody').attr("data-type", "collections");
-			
-			// Кнопка добавления новой коллекции
-			setTimeout(function(){
-				$("#db-view_wrapper .row:eq(0) .col-sm-6:eq(0)").append(
-					"<p style='margin: 0; padding: 10px 1px;'>" +
-					"<span id='set-collection' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer;'>" +
-					"Добавить коллекцию" +
-					"</span>" +
-					"</p>"
-				);
-			}, 100);
-			
-			$("#db-loading").css("display", "none");
-		},
-		error: function(error){
-			wmAlert("Ошибка подключения", "fail");
-			console.log(error);
+			$("#db-loading").css("display", "block");
 		}
-	});
+		
+		$.ajax({
+			url: config.api_db_mongodb + "/collections",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				// Вывод ошибки
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				// Установка названия текущей БД в заголовках
+				$("#db-name").html("<span>" + current_db + "</span>");
+				$("title").text("Weightless Manager | " + current_db);
+				
+				// Отображение коллекций
+				dt = $('#db-view').DataTable({
+					columns: [
+						{
+							data: "Коллекции",
+							title: "Коллекции"
+						}
+					],
+					data: result.response.collections,
+					paging: false,
+					language: {
+						url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
+					}
+				});
+				
+				$('#db-view tbody').attr("data-type", "collections");
+				
+				// Кнопка добавления новой коллекции
+				setTimeout(function(){
+					$("#db-view_wrapper .row:eq(0) .col-sm-6:eq(0)").append(
+						"<p style='margin: 0; padding: 10px 1px;'>" +
+						"<span id='set-collection' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer;'>" +
+						"Добавить коллекцию" +
+						"</span>" +
+						"</p>"
+					);
+				}, 100);
+				
+				$("#db-loading").css("display", "none");
+			},
+			error: function(error){
+				wmAlert("Ошибка подключения", "fail");
+				console.log(error);
+			}
+		});
+	}
+	
+	viewDB();
 	
 	// Просмотр коллекции
 	$("#db-view").on("click", "tbody[data-type='collections'] td", function(){
@@ -99,6 +106,9 @@ $(document).ready(function(){
 						return false;
 					}
 					
+					// Активация хлебной крошки к базе данных
+					$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
+					
 					// Добавление названия коллекции и кнопки обновления к заголовкам
 					$("#db-name")
 						.append("<span id='current_col'> > " + current_collection + "</span>")
@@ -109,6 +119,11 @@ $(document).ready(function(){
 					$("#col-reload").click(function(){
 						$("#current_col, #col-reload").remove();
 						requestCollection();
+					});
+					
+					// Обработка клика по хлебной крошке
+					$("#to-db").click(function(){
+						viewDB();
 					});
 					
 					$("#db-loading").css("display", "none");
@@ -269,6 +284,8 @@ $(document).ready(function(){
 				}
 				
 				wmAlert("Коллекция " + current_collection + " успешно удалена", "success");
+				
+				viewDB();
 			}
 		});
 	});
