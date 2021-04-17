@@ -138,6 +138,13 @@ $(document).ready(function(){
 					});
 					
 					setTimeout(function(){
+						// Добавление кнопок управления коллекцией
+						$("#db-view_length").append( // Удалить коллекцию
+							"<span id='drop-collection' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+							"Удалить коллекцию" +
+							"</span>"
+						);
+						
 						$.each($("tbody tr"), function(){
 							// Добавление кнопки удаления документа
 							$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить документ'></i>");
@@ -233,6 +240,36 @@ $(document).ready(function(){
 					console.log(error);
 				}
 			});
+		});
+	});
+	
+	// Удаление коллекции
+	$(".responsive-table").on("click", "#drop-collection", function(){
+		if(!confirm("Подтвердите удаление")) return false;
+		
+		$(this).text("").css("border", "none").addClass("fa fa-spinner fa-pulse");
+		
+		// Удаление коллекции из БД
+		$.ajax({
+			url: config.api_db_mongodb + "/deleteCollection",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"collection": current_collection,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				wmAlert("Коллекция " + current_collection + " успешно удалена", "success");
+			}
 		});
 	});
 	

@@ -21,6 +21,11 @@ functions:
     name: MongoDB/newCollection
     events:
       - http: POST MongoDB/newCollection
+  deleteCollection:
+    handler: action.deleteCollection
+    name: MongoDB/deleteCollection
+    events:
+      - http: POST MongoDB/deleteCollection
 
 plugins:
   - serverless-openwhisk
