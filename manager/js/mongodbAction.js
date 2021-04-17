@@ -131,6 +131,9 @@ $(document).ready(function(){
 					// Подготовка идентификаторов
 					$.each(result.response.documents, function(id, val){
 						result.response.documents[id]["_id"] = val._id.$oid;
+						result.response.documents[id]["Документ"] = JSON.parse(result.response.documents[id]["Документ"]);
+						result.response.documents[id]["Документ"]["_id"] = result.response.documents[id]["_id"];
+						result.response.documents[id]["Документ"] = JSON.stringify(result.response.documents[id]["Документ"]);
 					});
 					
 					// Инициализация новой таблицы с колонками
