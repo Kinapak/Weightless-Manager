@@ -1,0 +1,16 @@
+service: MongoDB
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  getCollections:
+    handler: action.getCollections
+    name: MongoDB/getCollections
+    events:
+      - http: POST MongoDB/getCollections
+
+plugins:
+  - serverless-openwhisk

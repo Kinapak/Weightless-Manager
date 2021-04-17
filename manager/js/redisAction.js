@@ -3,7 +3,7 @@ $(document).ready(function(){
 	let current_db = $(".databases-list").find("li.active").text(); // Текущая база данных
 	let dt; // Экземпляр таблицы для DataTable
 	
-	// Отображение таблиц базы данных при загрузке страницы
+	// Отображение ключей базы данных при загрузке страницы
 	$.ajax({
 		url: config.api_db_redis + "/keys",
 		type: "POST",
