@@ -11,6 +11,11 @@ functions:
     name: MongoDB/getCollections
     events:
       - http: POST MongoDB/getCollections
+  getCollection:
+    handler: action.getCollection
+    name: MongoDB/getCollection
+    events:
+      - http: POST MongoDB/getCollection
   newCollection:
     handler: action.newCollection
     name: MongoDB/newCollection

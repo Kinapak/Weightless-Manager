@@ -19,6 +19,25 @@
 		return ["response" => ["collections" => $collections_list]];
 	}
 	
+	// Получение коллекции и ее документов
+	function getCollection(array $args): array{
+		// Получение экземпляра базы данных MongoDB или вывод ошибки
+		$db = connect($args);
+		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
+		
+		// Выборка из БД
+		$collection = $db->selectCollection($args["collection"]);
+		$documents = $collection->find();
+		$documents->setTypeMap(["root" => "array"]);
+		
+		// Обработка документов
+		$documents_list = array();
+		foreach($documents as $document)
+			$documents_list[] = ["_id" => $document["_id"], "Документ" => json_encode($document)];
+		
+		return ["response" => ["documents" => $documents_list]];
+	}
+	
 	// Добавление новой коллекции
 	function newCollection(array $args): array{
 		// Получение экземпляра базы данных MongoDB или вывод ошибки
