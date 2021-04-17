@@ -62,6 +62,19 @@
 		return ["response" => "Success"];
 	}
 	
+	// Удаление документа
+	function removeDocument(array $args): array{
+		// Получение экземпляра базы данных MongoDB или вывод ошибки
+		$db = connect($args);
+		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
+		
+		// Удаляем документ
+		$collection = $db->selectCollection($args["collection"]);
+		$collection->deleteOne(['_id' => new MongoDB\BSON\ObjectId($args["_id"])]);
+		
+		return ["response" => "Success"];
+	}
+	
 	// Подключение к базе данных MongoDB
 	function connect($args){
 		global $to_decrypt;
