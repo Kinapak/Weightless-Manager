@@ -67,6 +67,7 @@ $(document).ready(function(){
 						'\t\t\t\t\t\t<select name="type" class="form-control" required>\n' +
 						'\t\t\t\t\t\t\t<option value="0" disabled>Тип базы данных</option>\n' +
 						'\t\t\t\t\t\t\t<option value="mysql">MySQL</option>\n' +
+						'\t\t\t\t\t\t\t<option value="mongodb">MongoDB</option>\n' +
 						'\t\t\t\t\t\t\t<option value="redis">Redis</option>\n' +
 						'\t\t\t\t\t\t</select>\n' +
 						'\t\t\t\t\t</div>\n' +
