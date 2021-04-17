@@ -11,6 +11,11 @@ functions:
     name: MongoDB/getCollections
     events:
       - http: POST MongoDB/getCollections
+  newCollection:
+    handler: action.newCollection
+    name: MongoDB/newCollection
+    events:
+      - http: POST MongoDB/newCollection
 
 plugins:
   - serverless-openwhisk
