@@ -183,8 +183,8 @@ $(document).ready(function(){
 							
 							// Обрезка длинных JSON
 							$($(this).find("td")[1]).text(function(i, text){
-								if(text.length >= 100)
-									text = text.substring(0, 100) + "...";
+								if(text.length >= 120)
+									text = text.substring(0, 120) + "...";
 								$(this).text(text);
 							});
 						});
