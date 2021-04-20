@@ -16,6 +16,10 @@ $(document).ready(function(){
 			$("#db-loading").css("display", "block");
 		}
 		
+		// Установка названия текущей БД в заголовках
+		$("#db-name").html("<span>" + current_db + "</span>");
+		$("title").text("Weightless Manager | " + current_db);
+		
 		$.ajax({
 			url: config.api_db_mongodb + "/collections",
 			type: "POST",
@@ -33,10 +37,6 @@ $(document).ready(function(){
 					wmAlert(result.response.error, "fail");
 					return false;
 				}
-				
-				// Установка названия текущей БД в заголовках
-				$("#db-name").html("<span>" + current_db + "</span>");
-				$("title").text("Weightless Manager | " + current_db);
 				
 				// Отображение коллекций
 				dt = $('#db-view').DataTable({
@@ -77,7 +77,7 @@ $(document).ready(function(){
 	
 	viewDB();
 	
-	// Просмотр коллекции todo title
+	// Просмотр коллекции
 	$("#db-view").on("click", "tbody[data-type='collections'] td", function(){
 		current_collection = $(this).text().trim(); // Название коллекции для выборки из БД
 		
@@ -87,6 +87,18 @@ $(document).ready(function(){
 			if($("#db-view").find("tbody").length) dt.destroy();
 			$('#db-view').html("");
 			$("#db-loading").css("display", "block");
+			
+			// Активация хлебной крошки к базе данных
+			$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
+			$("#to-db").click(function(){
+				viewDB();
+			});
+			
+			// Добавление названия коллекции и кнопки обновления к заголовкам
+			$("#db-name")
+				.append("<span id='current-col'> > <span>" + current_collection + "</span></span>")
+				.append(" <i id='col-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
+			$("title").append(" > " + current_collection);
 			
 			$.ajax({
 				url: config.api_db_mongodb + "/collection",
@@ -107,24 +119,10 @@ $(document).ready(function(){
 						return false;
 					}
 					
-					// Активация хлебной крошки к базе данных
-					$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
-					
-					// Добавление названия коллекции и кнопки обновления к заголовкам
-					$("#db-name")
-						.append("<span id='current-col'> > <span>" + current_collection + "</span></span>")
-						.append(" <i id='col-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
-					$("title").append(" > " + current_collection);
-					
 					// Обработка клика по кнопке перезагрузки таблицы
 					$("#col-reload").click(function(){
 						$("#current-col, #col-reload").remove();
 						requestCollection();
-					});
-					
-					// Обработка клика по хлебной крошке
-					$("#to-db").click(function(){
-						viewDB();
 					});
 					
 					$("#db-loading").css("display", "none");

@@ -3,6 +3,10 @@ $(document).ready(function(){
 	let current_db = $(".databases-list").find("li.active").text(); // Текущая база данных
 	let dt; // Экземпляр таблицы для DataTable
 	
+	// Установка названия текущей БД в заголовках
+	$("#db-name").html("<span>" + current_db + "</span>");
+	$("title").text("Weightless Manager | " + current_db);
+	
 	// Отображение ключей базы данных при загрузке страницы
 	$.ajax({
 		url: config.api_db_redis + "/keys",
@@ -27,10 +31,6 @@ $(document).ready(function(){
 				dt.destroy();
 				$('#db-view').html("");
 			}
-			
-			// Установка названия текущей БД в заголовках
-			$("#db-name").html("<span>" + current_db + "</span>");
-			$("title").text("Weightless Manager | " + current_db);
 			
 			// Отображение пар ключ-значение
 			dt = $('#db-view').DataTable({

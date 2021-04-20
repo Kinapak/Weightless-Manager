@@ -5,6 +5,10 @@ $(document).ready(function(){
 	let dt; // Экземпляр таблицы для DataTable
 	let viewDB; // Текущее представление таблиц в базе данных
 	
+	// Установка названия текущей БД в заголовках
+	$("#db-name").html("<span>" + current_db + "</span>");
+	$("title").text("Weightless Manager | " + current_db);
+	
 	// Отображение таблиц базы данных при загрузке страницы
 	$.ajax({
 		url: config.api_db_mysql + "/tables",
@@ -80,6 +84,18 @@ $(document).ready(function(){
 			
 			let limit = 10000; // Лимит на кол-во запрашиваемых строк для разделения запросов
 			
+			// Активация хлебной крошки к базе данных
+			$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
+			$("#to-db").click(function(){
+				viewDB();
+			});
+			
+			// Добавление названия таблицы и кнопки обновления к заголовкам
+			$("#db-name")
+				.append("<span id='current_table'> > " + current_table + "</span>")
+				.append(" <i id='table-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
+			$("title").append(" > " + current_table);
+			
 			$.ajax({
 				url: config.api_db_mysql + "/table",
 				type: "POST",
@@ -102,20 +118,6 @@ $(document).ready(function(){
 							return false;
 						}
 					}
-					
-					// Активация хлебной крошки к базе данных
-					$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
-					
-					// Добавление названия таблицы и кнопки обновления к заголовкам
-					$("#db-name")
-						.append("<span id='current_table'> > " + current_table + "</span>")
-						.append(" <i id='table-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
-					$("title").append(" > " + current_table);
-					
-					// Обработка клика по хлебной крошке
-					$("#to-db").click(function(){
-						viewDB();
-					});
 					
 					// Обработка клика по кнопке перезагрузки таблицы
 					$("#table-reload").click(function(){
