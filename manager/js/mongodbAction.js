@@ -9,7 +9,7 @@ $(document).ready(function(){
 	function viewDB(){
 		// Если уже инициализирован экземпляр таблицы, необходимо его удалить
 		if($("#db-loading").css("display") == "none"){
-			if(dt){
+			if($("#db-view tbody").length){
 				dt.destroy();
 				$('#db-view').html("");
 			}
@@ -91,6 +91,11 @@ $(document).ready(function(){
 			// Активация хлебной крошки к базе данных
 			$("#db-name span").attr("id", "to-db").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
 			$("#to-db").click(function(){
+				if($("#editor").length){
+					$(".responsive-table").parent().removeClass("editor_active");
+					$(".responsive-table").removeClass("editor_active");
+					editor.remove();
+				}
 				viewDB();
 			});
 			
