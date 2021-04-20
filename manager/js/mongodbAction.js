@@ -127,12 +127,15 @@ $(document).ready(function(){
 					
 					$("#db-loading").css("display", "none");
 					
-					// Подготовка идентификаторов todo обработка не ObjectID
+					// Подготовка идентификаторов
 					$.each(result.response.documents, function(id, val){
-						result.response.documents[id]["_id"] = val._id.$oid;
-						result.response.documents[id]["Документ"] = JSON.parse(result.response.documents[id]["Документ"]);
-						result.response.documents[id]["Документ"]["_id"] = result.response.documents[id]["_id"];
-						result.response.documents[id]["Документ"] = JSON.stringify(result.response.documents[id]["Документ"]);
+						// Если нет ObjectID, подготовка не нужна
+						if(val._id.$oid){
+							result.response.documents[id]["_id"] = val._id.$oid;
+							result.response.documents[id]["Документ"] = JSON.parse(result.response.documents[id]["Документ"]);
+							result.response.documents[id]["Документ"]["_id"] = result.response.documents[id]["_id"];
+							result.response.documents[id]["Документ"] = JSON.stringify(result.response.documents[id]["Документ"]);
+						}
 					});
 					
 					// Инициализация новой таблицы с колонками
@@ -325,9 +328,9 @@ $(document).ready(function(){
 					return false;
 				}
 				
-				// Подготовка идентификаторов todo обработка не ObjectID
+				// Подготовка идентификаторов
 				let doc = JSON.parse(result.response.document);
-				doc["_id"] = doc["_id"]["$oid"];
+				if(doc["_id"]["$oid"]) doc["_id"] = doc["_id"]["$oid"];
 				editor.set(doc);
 				
 				$("#db-loading").css("display", "none");

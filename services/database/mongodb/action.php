@@ -71,9 +71,14 @@
 		$db = connect($args);
 		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
 		
-		// Выборка из БД
+		// Выборка из БД в зависимости от типа идентификатора
+		try{
+			$_id = new MongoDB\BSON\ObjectId($args["_id"]);
+		} catch(MongoDB\Driver\Exception\Exception $e){
+			$_id = preg_match("/[a-z]|[A-Z]/", $args["_id"]) ? $args["_id"] : (int)$args["_id"];
+		}
 		$collection = $db->selectCollection($args["collection"]);
-		$documents = $collection->find(['_id' => new MongoDB\BSON\ObjectId($args["_id"])]);
+		$documents = $collection->find(['_id' => $_id]);
 		$documents->setTypeMap(["root" => "array"]);
 		
 		// Обработка документов
@@ -91,10 +96,15 @@
 		
 		$collection = $db->selectCollection($args["collection"]);
 		
-		// Обновление документа
+		// Обновление документа в зависимости от типа идентификатора
+		try{
+			$_id = new MongoDB\BSON\ObjectId($args["_id"]);
+		} catch(MongoDB\Driver\Exception\Exception $e){
+			$_id = preg_match("/[a-z]|[A-Z]/", $args["_id"]) ? $args["_id"] : (int)$args["_id"];
+		}
 		$updated = json_decode($args["updated"], true);
 		unset($updated["_id"]);
-		$collection->replaceOne(['_id' => new MongoDB\BSON\ObjectId($args["_id"])], $updated);
+		$collection->replaceOne(['_id' => $_id], $updated);
 		
 		return ["response" => "Success"];
 	}
@@ -105,9 +115,14 @@
 		$db = connect($args);
 		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
 		
-		// Удаляем документ
+		// Удаление документа в зависимости от типа идентификатора
+		try{
+			$_id = new MongoDB\BSON\ObjectId($args["_id"]);
+		} catch(MongoDB\Driver\Exception\Exception $e){
+			$_id = preg_match("/[a-z]|[A-Z]/", $args["_id"]) ? $args["_id"] : (int)$args["_id"];
+		}
 		$collection = $db->selectCollection($args["collection"]);
-		$collection->deleteOne(['_id' => new MongoDB\BSON\ObjectId($args["_id"])]);
+		$collection->deleteOne(['_id' => $_id]);
 		
 		return ["response" => "Success"];
 	}
