@@ -62,6 +62,43 @@
 		return ["response" => "Success"];
 	}
 	
+	// Получение документа из коллекции
+	function getMongoDBDocument(array $args): array{
+		if(empty(trim($args["_id"]))) // Проверка идентификатора
+			return ["response" => ["error" => "Некорректный запрос"]];
+		
+		// Получение экземпляра базы данных MongoDB или вывод ошибки
+		$db = connect($args);
+		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
+		
+		// Выборка из БД
+		$collection = $db->selectCollection($args["collection"]);
+		$documents = $collection->find(['_id' => new MongoDB\BSON\ObjectId($args["_id"])]);
+		$documents->setTypeMap(["root" => "array"]);
+		
+		// Обработка документов
+		foreach($documents as $document)
+			$doc = json_encode($document);
+		
+		return ["response" => ["document" => $doc]];
+	}
+	
+	// Обновление документа
+	function updateDocument(array $args): array{
+		// Получение экземпляра базы данных MongoDB или вывод ошибки
+		$db = connect($args);
+		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
+		
+		$collection = $db->selectCollection($args["collection"]);
+		
+		// Обновление документа
+		$updated = json_decode($args["updated"], true);
+		unset($updated["_id"]);
+		$collection->replaceOne(['_id' => new MongoDB\BSON\ObjectId($args["_id"])], $updated);
+		
+		return ["response" => "Success"];
+	}
+	
 	// Удаление документа
 	function removeDocument(array $args): array{
 		// Получение экземпляра базы данных MongoDB или вывод ошибки

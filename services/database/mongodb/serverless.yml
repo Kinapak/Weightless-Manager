@@ -26,6 +26,16 @@ functions:
     name: MongoDB/deleteCollection
     events:
       - http: POST MongoDB/deleteCollection
+  getMongoDBDocument:
+    handler: action.getMongoDBDocument
+    name: MongoDB/getDocument
+    events:
+      - http: POST MongoDB/getDocument
+  updateDocument:
+    handler: action.updateDocument
+    name: MongoDB/updateDocument
+    events:
+      - http: POST MongoDB/updateDocument
   removeDocument:
     handler: action.removeDocument
     name: MongoDB/removeDocument

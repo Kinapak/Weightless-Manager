@@ -2,6 +2,7 @@ $(document).ready(function(){
 	
 	let current_db = $(".databases-list").find("li.active").text(); // Текущая база данных
 	let current_collection; // Текущая коллекция
+	let requestCollection; // Запрос текущей коллекции
 	let dt; // Экземпляр таблицы для DataTable
 	
 	// Отображение коллекций базы данных при загрузке страницы
@@ -76,14 +77,14 @@ $(document).ready(function(){
 	
 	viewDB();
 	
-	// Просмотр коллекции
+	// Просмотр коллекции todo title
 	$("#db-view").on("click", "tbody[data-type='collections'] td", function(){
 		current_collection = $(this).text().trim(); // Название коллекции для выборки из БД
 		
 		// Запрос коллекции
-		function requestCollection(){
+		requestCollection = function(){
 			// Удаление текущей таблицы
-			dt.destroy();
+			if($("#db-view").find("tbody").length) dt.destroy();
 			$('#db-view').html("");
 			$("#db-loading").css("display", "block");
 			
@@ -111,13 +112,13 @@ $(document).ready(function(){
 					
 					// Добавление названия коллекции и кнопки обновления к заголовкам
 					$("#db-name")
-						.append("<span id='current_col'> > " + current_collection + "</span>")
+						.append("<span id='current-col'> > <span>" + current_collection + "</span></span>")
 						.append(" <i id='col-reload' class='fa fa-refresh' style='cursor:pointer;color:#d2d2d2;font-size:16px;'></i>");
 					$("title").append(" > " + current_collection);
 					
 					// Обработка клика по кнопке перезагрузки таблицы
 					$("#col-reload").click(function(){
-						$("#current_col, #col-reload").remove();
+						$("#current-col, #col-reload").remove();
 						requestCollection();
 					});
 					
@@ -128,7 +129,7 @@ $(document).ready(function(){
 					
 					$("#db-loading").css("display", "none");
 					
-					// Подготовка идентификаторов
+					// Подготовка идентификаторов todo обработка не ObjectID
 					$.each(result.response.documents, function(id, val){
 						result.response.documents[id]["_id"] = val._id.$oid;
 						result.response.documents[id]["Документ"] = JSON.parse(result.response.documents[id]["Документ"]);
@@ -258,6 +259,177 @@ $(document).ready(function(){
 					console.log(error);
 				}
 			});
+		});
+	});
+	
+	//todo создание документа так же через редактор. Сначала разобраться с ObjectID и другими todo
+	
+	// Редактирование документа
+	$("#db-view").on("dblclick", "tbody[data-type='collection-view'] td", function(){
+		let $this = $(this);
+		let _id = $this.index() == 0 ? $this.text() : $this.parent().find("td:eq(0)").text();
+		
+		// Удаление таблицы
+		dt.destroy();
+		$('#db-view').html("");
+		$("#db-loading").css("display", "block");
+		
+		// Заголовки
+		$("title").append(" > " + _id);
+		$("#col-reload").remove();
+		$("#current-col span").attr("id", "to-col").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
+		$("#db-name").append("<span id='current-doc'> > " + _id + "</span>");
+		
+		// Активация хлебной крошки к коллекции
+		$("#to-col").click(function(){
+			editor.toCollection();
+		});
+		
+		// Подготовка редактора
+		$(".responsive-table").parent().addClass("editor_active");
+		$(".responsive-table").addClass("editor_active");
+		$(".responsive-table").append("<div id='editor'></div>");
+		let container = document.getElementById("editor");
+		let options = {
+			modes: ['code', 'text'],
+			mode: 'code',
+			ace: ace
+		}
+		let editor = new JSONEditor(container, options);
+		
+		// Переход обратно в коллекцию
+		editor.toCollection = function(){
+			$("title").text("Weightless Manager | " + current_db);
+			$(".responsive-table").parent().removeClass("editor_active");
+			$(".responsive-table").removeClass("editor_active");
+			$("#current-col, #current-doc").remove();
+			$("#editor").remove();
+			requestCollection();
+		};
+		
+		// Получение документа
+		$.ajax({
+			url: config.api_db_mongodb + "/document",
+			type: "POST",
+			dataType: "json",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"db": current_db,
+				"collection": current_collection,
+				"_id": _id,
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				if(result.response.error){
+					wmAlert(result.response.error, "fail");
+					return false;
+				}
+				
+				// Подготовка идентификаторов todo обработка не ObjectID
+				let doc = JSON.parse(result.response.document);
+				doc["_id"] = doc["_id"]["$oid"];
+				editor.set(doc);
+				
+				$("#db-loading").css("display", "none");
+				
+				// Добавление кнопок управления
+				$("#editor").prepend(
+					"<button id='save-document' class='btn btn-round btn-success' style='float: left;'>Сохранить</button>" +
+					"<button id='cancel-document' class='btn btn-round btn-default' style='margin: 0 0 10px 10px;'>Отмена</button>" +
+					"<button id='remove-document' class='btn btn-round btn-danger' style='float: right;'>Удалить документ</button>"
+				);
+				
+				// Сохранение документа
+				$("#save-document").click(function(){
+					let $this = $(this);
+					$this.attr("id", "");
+					$this.html("<i class='fa fa-spinner fa-pulse'></i>");
+					
+					try{
+						let updated = editor.get();
+						
+						$.ajax({
+							url: config.api_db_mongodb + "/updateDocument",
+							type: "POST",
+							dataType: "json",
+							headers: {
+								"Authorization": "Bearer " + localStorage.getItem("user_token")
+							},
+							data: {
+								"db": current_db,
+								"collection": current_collection,
+								"_id": _id,
+								"updated": JSON.stringify(updated),
+								"iam-token": localStorage.getItem("IAM_token")
+							},
+							success: function(result){
+								if(result.response.error){
+									wmAlert(result.response.error, "fail");
+									return false;
+								}
+								
+								wmAlert("Документ успешно сохранен", "success");
+								
+								$this.attr("id", "save-document");
+								$this.html("Сохранить");
+							},
+							error: function(error){
+								wmAlert("Что-то пошло не так... См. логи", "fail");
+								console.log(error);
+							}
+						});
+					} catch(e){
+						wmAlert("В документе присутствуют ошибки", "fail");
+						console.log(e);
+					}
+				});
+				
+				// Удаление документа из редактора
+				$("#remove-document").click(function(){
+					if(!confirm("Подтвердите удаление")) return false;
+					
+					$(this).attr("id", "");
+					$(this).html("<i class='fa fa-spinner fa-pulse'></i>");
+					
+					$.ajax({
+						url: config.api_db_mongodb + "/removeDocument",
+						type: "POST",
+						dataType: "json",
+						headers: {
+							"Authorization": "Bearer " + localStorage.getItem("user_token")
+						},
+						data: {
+							"db": current_db,
+							"collection": current_collection,
+							"_id": _id,
+							"iam-token": localStorage.getItem("IAM_token")
+						},
+						success: function(result){
+							if(result.response.error){
+								wmAlert(result.response.error, "fail");
+								return false;
+							}
+							
+							editor.toCollection();
+						},
+						error: function(error){
+							wmAlert("Что-то пошло не так... См. логи", "fail");
+							console.log(error);
+						}
+					});
+				});
+				
+				// Отмена с переходом обратно в коллекцию
+				$("#cancel-document").click(function(){
+					editor.toCollection();
+				});
+			},
+			error: function(error){
+				wmAlert("Что-то пошло не так... См. логи", "fail");
+				console.log(error);
+			}
 		});
 	});
 	
