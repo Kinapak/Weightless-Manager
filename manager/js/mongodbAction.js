@@ -158,9 +158,16 @@ $(document).ready(function(){
 					});
 					
 					setTimeout(function(){
-						// Добавление кнопок управления коллекцией
-						$("#db-view_length").append( // Удалить коллекцию
-							"<span id='drop-collection' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;margin-left:15px;'>" +
+						// Добавить документ
+						$("#db-view_length").append(
+							"<span id='add-document' style='border-bottom: 1px dashed #d8d8d8; cursor: pointer; margin: 0 15px 0 15px;'>" +
+							"Добавить документ" +
+							"</span>"
+						);
+						
+						// Удалить коллекцию
+						$("#db-view_length").append(
+							"<span id='drop-collection' class='text-danger' style='border-bottom:1px dashed #ff6656;cursor:pointer;'>" +
 							"Удалить коллекцию" +
 							"</span>"
 						);
@@ -263,7 +270,103 @@ $(document).ready(function(){
 		});
 	});
 	
-	//todo создание документа так же через редактор. Сначала разобраться с ObjectID и другими todo
+	$(".responsive-table").on("click", "#add-document", function(){
+		// Удаление таблицы
+		dt.destroy();
+		$('#db-view').html("");
+		$("#db-loading").css("display", "block");
+		
+		// Заголовки
+		$("title").append(" > Новый документ");
+		$("#col-reload").remove();
+		$("#current-col span").attr("id", "to-col").attr("style", "border-bottom: 1px dashed #d8d8d8; cursor: pointer;");
+		$("#db-name").append("<span id='current-doc'> > Новый документ</span>");
+		
+		// Активация хлебной крошки к коллекции
+		$("#to-col").click(function(){
+			if(!confirm("В редакторе остались несохраненные данные. Продолжить?")) return false;
+			editor.toCollection();
+		});
+		
+		// Подготовка редактора
+		$(".responsive-table").parent().addClass("editor_active");
+		$(".responsive-table").addClass("editor_active");
+		$(".responsive-table").append("<div id='editor'></div>");
+		let container = document.getElementById("editor");
+		let options = {
+			modes: ['code', 'text'],
+			mode: 'code',
+			ace: ace
+		}
+		let editor = new JSONEditor(container, options);
+		editor.set({"_id": ""});
+		
+		$("#db-loading").css("display", "none");
+		
+		// Добавление кнопок управления
+		$("#editor").prepend(
+			"<button id='save-document' class='btn btn-round btn-success' style='float: left;'>Сохранить</button>" +
+			"<button id='cancel-document' class='btn btn-round btn-default' style='margin: 0 0 10px 10px;'>Отмена</button>"
+		);
+		
+		// Переход обратно в коллекцию
+		editor.toCollection = function(){
+			$("title").text("Weightless Manager | " + current_db);
+			$(".responsive-table").parent().removeClass("editor_active");
+			$(".responsive-table").removeClass("editor_active");
+			$("#current-col, #current-doc").remove();
+			$("#editor").remove();
+			requestCollection();
+		};
+		
+		// Отмена с переходом обратно в коллекцию
+		$("#cancel-document").click(function(){
+			if(!confirm("В редакторе остались несохраненные данные. Продолжить?")) return false;
+			editor.toCollection();
+		});
+		
+		$("#save-document").click(function(){
+			let $this = $(this);
+			$this.attr("id", "");
+			$this.html("<i class='fa fa-spinner fa-pulse'></i>");
+			
+			try{
+				let doc = editor.get();
+				
+				$.ajax({
+					url: config.api_db_mongodb + "/newDocument",
+					type: "POST",
+					dataType: "json",
+					headers: {
+						"Authorization": "Bearer " + localStorage.getItem("user_token")
+					},
+					data: {
+						"db": current_db,
+						"collection": current_collection,
+						"doc": JSON.stringify(doc),
+						"iam-token": localStorage.getItem("IAM_token")
+					},
+					success: function(result){
+						if(result.response.error){
+							wmAlert(result.response.error, "fail");
+							return false;
+						}
+						
+						wmAlert("Документ успешно сохранен", "success");
+						
+						editor.toCollection();
+					},
+					error: function(error){
+						wmAlert("Что-то пошло не так... См. логи", "fail");
+						console.log(error);
+					}
+				});
+			} catch(e){
+				wmAlert("В документе присутствуют ошибки", "fail");
+				console.log(e);
+			}
+		});
+	});
 	
 	// Редактирование документа
 	$("#db-view").on("dblclick", "tbody[data-type='collection-view'] td", function(){

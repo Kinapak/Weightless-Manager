@@ -88,6 +88,21 @@
 		return ["response" => ["document" => $doc]];
 	}
 	
+	// Добавление документа
+	function newDocument(array $args): array{
+		// Получение экземпляра базы данных MongoDB или вывод ошибки
+		$db = connect($args);
+		if(is_array($db)) return ["response" => ["error" => $db["response"]["error"]]];
+		
+		$collection = $db->selectCollection($args["collection"]);
+		
+		$doc = json_decode($args["doc"], true);
+		if(!strlen(trim($doc["_id"]))) unset($doc["_id"]);
+		$collection->insertOne($doc);
+		
+		return ["response" => "Success"];
+	}
+	
 	// Обновление документа
 	function updateDocument(array $args): array{
 		// Получение экземпляра базы данных MongoDB или вывод ошибки
