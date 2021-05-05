@@ -178,9 +178,6 @@ $(document).ready(function(){
 						);
 						
 						$.each($("tbody tr"), function(){
-							// Добавление кнопки удаления документа
-							$($(this).find($("td"))[0]).append("<i class='fa fa-close fa-lg remove-row' title='Удалить документ'></i>");
-							
 							// Обрезка длинных JSON
 							$($(this).find("td")[1]).text(function(i, text){
 								if(text.length >= 120)
