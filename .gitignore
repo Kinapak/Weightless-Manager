@@ -5,3 +5,8 @@ jspm_packages
 
 .idea
 .DS_Store
+
+services/*/package.json
+services/*/package-lock.json
+services/*/*/package.json
+services/*/*/package-lock.json
