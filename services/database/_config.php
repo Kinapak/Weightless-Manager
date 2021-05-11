@@ -1,10 +1,10 @@
 <?php
-	$cloudant_url = "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/";
+	$cloudant_url = "https://aa5c968d-2972-4175-b569-700a1328047f-bluemix.cloudant.com/";
 	$db_type_list = array("mysql", "mongodb", "redis");
 	
 	$to_decrypt = ["user", "password", "db"]; // Поля для дешифрования
 	
-	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор App ID
+	$tenant_id = "99f870dc-02ac-4082-812e-f9a271bcd35d"; // Идентификатор App ID
 	
 	// Получение документа из Cloudant
 	function getDocument($iam, $db, $application): array{

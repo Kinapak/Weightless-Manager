@@ -1,13 +1,13 @@
 {
-	"api_user_login": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/user\/login",
-	"api_db_management": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/database\/management",
-	"api_db_mysql": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/database\/mysql",
-	"api_db_redis": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/database\/redis",
-	"api_db_mongodb": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/database\/mongodb",
-	"api_app_management": "https:\/\/d0925254.eu-gb.apigw.appdomain.cloud\/app\/management",
-	"tenant": "53cfab53-a6af-49d1-94a3-a182a24a3312",
-	"app_id": "ad05d88d-7a0b-4b58-bbf6-fd9efab6b3ed",
-	"secret": "NmY2ZDVmN2YtMGFlNi00ZDdmLWEyNGYtZmYwYzhiMTRiNmQz",
-	"domain": "https:\/\/wm.test\/",
+	"api_user_login": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/user/login",
+	"api_db_management": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/management",
+	"api_db_mysql": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/mysql",
+	"api_db_redis": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/redis",
+	"api_db_mongodb": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/mongodb",
+	"api_app_management": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/app/management",
+	"tenant": "99f870dc-02ac-4082-812e-f9a271bcd35d",
+	"app_id": "a9e1d51c-66bc-453f-9b60-0ec5113d7dea",
+	"secret": "Y2NjNzg0NzMtZjQyNy00NjUyLWIzZTgtMGE3NzNkNThkMjQ2",
+	"domain": "https://wm.test/",
 	"version": "v0.4.0"
 }

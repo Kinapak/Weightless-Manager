@@ -1,7 +1,7 @@
 <?php
-	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312"; // Идентификатор App ID
+	$tenant_id = "99f870dc-02ac-4082-812e-f9a271bcd35d"; // Идентификатор App ID
 	
 	// API-ключи для IAM-токенов с разными ролями доступа
-	$cloudant_reader_key = "1gUGx2nwql7n11J55Ixp8ga_NpSUcx5gDB7UCiQPvBnv";
-	$cloudant_writer_key = "AePJKHDmMde3XGVIKRl5w-PbzAgzfxhuV1B5FGEd5xV4";
-	$appid_key = "qOjusvSnDdHz0CEiTi6qxXfO6jvQgoJjqhfg3Eh9zVP4";
+	$cloudant_reader_key = "ssxldv-QSTnJ6Bnq4YUb7amVKKpc0zgRE9Lk9hNSAfdm";
+	$cloudant_writer_key = "7euANKbPn33otCj9X7q0F4gdpk6z8diZ6VLsooVR4mwh";
+	$appid_key = "rIuIF3wVkZrBWVko6asA9yE0quWTBvJwmgLcCjaqm1fu";

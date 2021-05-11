@@ -58,7 +58,7 @@ function checkToken(){
 				checkVersion(result.response.settings || false); // Сперва проверка на новую версию
 				
 				// Меню настроек
-				if(result.response.settings){
+				if(result.response.settings.length != 0){
 					$.each(result.response.settings, function(link, name){
 						$(".settings .tree").append("<li><a href='views/" + link + ".html'>" + name + "</a></li>");
 					});

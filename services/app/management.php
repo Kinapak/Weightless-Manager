@@ -93,7 +93,7 @@
 		// Добавление обновленных ролей
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/management/v4/53cfab53-a6af-49d1-94a3-a182a24a3312/users/".$user["users"][0]["id"]."/roles",
+		 CURLOPT_URL => "https://eu-gb.appid.cloud.ibm.com/management/v4/".$tenant_id."/users/".$user["users"][0]["id"]."/roles",
 		 CURLOPT_RETURNTRANSFER => true,
 		 CURLOPT_FOLLOWLOCATION => 1,
 		 CURLOPT_TIMEOUT => 60,

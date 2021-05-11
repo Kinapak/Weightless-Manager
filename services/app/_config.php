@@ -1,6 +1,6 @@
 <?php
-	$tenant_id = "53cfab53-a6af-49d1-94a3-a182a24a3312";
-	$cloudant_url = "https://ff7c931e-24a9-42ce-b841-88963bcd0391-bluemix.cloudant.com/";
+	$tenant_id = "99f870dc-02ac-4082-812e-f9a271bcd35d";
+	$cloudant_url = "https://aa5c968d-2972-4175-b569-700a1328047f-bluemix.cloudant.com/";
 	
 	$key_types = array("PUBLIC", "PRIVATE"); // Допустимые типы ключей
 	
