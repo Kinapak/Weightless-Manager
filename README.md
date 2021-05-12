@@ -35,7 +35,7 @@
         $cloudant_url = "https://aa5c968d-2972-4175-b569-700a1328047f-bluemix.cloudant.com";
 
 6. На вкладке Service Credentials создать две записи: для чтения и записи в Cloudant. Скопировать ключи апи в конфиги.
-7. Для данных записей в настройках аккаунта в разделе Access (IAM) > Service IDs на вкладке Access policies создать записи с полномочиями Reader для App ID с указанием Service Instance.
+7. В настройках аккаунта в разделе Access (IAM) > Service IDs на вкладке Access policies создать записи с полномочиями Reader для чтения и Reader, Writer для записи с указанием Service Instance App ID.
 
 ## config.json
 Конфигурация приложения с адресами доступных апи и параметрами приложения из App ID.
