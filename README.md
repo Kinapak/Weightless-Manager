@@ -82,22 +82,22 @@
 Все апи должны быть настроены для авторизации через App ID, исключая user_login. Настройки каждого API-интерфейса, операции и пути см. ниже.
 
 ### user_login
-![user_login](https://russiabase.ru/wm/api_img/user_login.png)
+![user_login](https://russiabase.ru/wm/docs/api_img/user_login.png)
 
 ### app_management
-![app_management](https://russiabase.ru/wm/api_img/app_management.png)
+![app_management](https://russiabase.ru/wm/docs/api_img/app_management.png)
 
 ### database_management
-![database_management](https://russiabase.ru/wm/api_img/database_management.png)
+![database_management](https://russiabase.ru/wm/docs/api_img/database_management.png)
 
 ### database_mysql
-![database_mysql](https://russiabase.ru/wm/api_img/database_mysql.png)
+![database_mysql](https://russiabase.ru/wm/docs/api_img/database_mysql.png)
 
 ### database_redis
-![database_redis](https://russiabase.ru/wm/api_img/database_redis.png)
+![database_redis](https://russiabase.ru/wm/docs/api_img/database_redis.png)
 
 ### database_mongodb
-![database_mongodb](https://russiabase.ru/wm/api_img/database_mongodb.png)
+![database_mongodb](https://russiabase.ru/wm/docs/api_img/database_mongodb.png)
 
 ## Установка приложения
 Для установки на сервер необходимо создать отдельную директорию под административную панель.\
