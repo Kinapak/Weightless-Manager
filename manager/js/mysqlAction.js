@@ -47,7 +47,7 @@ $(document).ready(function(){
 						data: result.tables.empty || result.tables,
 						paging: false,
 						language: {
-							url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
+							url: "https://russiabase.ru/wm/v0.4.1/manager/js/plugins/dataTables.russian.json"
 						}
 					});
 				
@@ -156,7 +156,7 @@ $(document).ready(function(){
 						columns: result.cols,
 						pageLength: 50,
 						language: {
-							url: "https://russiabase.ru/wm/v0.4.0/manager/js/plugins/dataTables.russian.json"
+							url: "https://russiabase.ru/wm/v0.4.1/manager/js/plugins/dataTables.russian.json"
 						}
 					});
 					

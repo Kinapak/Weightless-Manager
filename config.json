@@ -9,5 +9,5 @@
 	"app_id": "a9e1d51c-66bc-453f-9b60-0ec5113d7dea",
 	"secret": "Y2NjNzg0NzMtZjQyNy00NjUyLWIzZTgtMGE3NzNkNThkMjQ2",
 	"domain": "https://wm.test/",
-	"version": "v0.4.0"
+	"version": "v0.4.1"
 }
