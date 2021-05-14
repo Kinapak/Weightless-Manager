@@ -1,0 +1,16 @@
+service: logs
+configValidationMode: off
+
+provider:
+  name: openwhisk
+  runtime: php
+
+functions:
+  setLog:
+    handler: logger.setLog
+    name: logs/setLog
+    events:
+      - http: POST logs/setLog
+
+plugins:
+  - serverless-openwhisk

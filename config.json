@@ -5,6 +5,7 @@
 	"api_db_redis": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/redis",
 	"api_db_mongodb": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/database/mongodb",
 	"api_app_management": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/app/management",
+	"api_logs": "https://service.eu.apiconnect.ibmcloud.com/gws/apigateway/api/398890224bb2bbd3b2bbe55d1f150f2e18f4db8b239d431e80f44a3052dab385/wm_logs",
 	"tenant": "99f870dc-02ac-4082-812e-f9a271bcd35d",
 	"app_id": "a9e1d51c-66bc-453f-9b60-0ec5113d7dea",
 	"secret": "Y2NjNzg0NzMtZjQyNy00NjUyLWIzZTgtMGE3NzNkNThkMjQ2",
