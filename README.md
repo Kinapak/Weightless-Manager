@@ -37,6 +37,13 @@
 6. На вкладке Service Credentials создать две записи: для чтения и записи в Cloudant. Скопировать ключи апи в конфиги.
 7. В настройках аккаунта в разделе Access (IAM) > Service IDs на вкладке Access policies создать записи с полномочиями Reader для чтения и Reader, Writer для записи с указанием Service Instance App ID.
 
+## Object Storage
+Используется для хранения текстовых документов (.txt) с логами приложений. Для каждого приложения создается свой отдельный bucket.\
+Настройка:
+1. На вкладке Service Credentials создать запись с полномочиями Object Writer, параметр HMAC поставить On. Скопировать ключ апи в конфиг сервиса логирования.
+2. На вкладке Enpoints выбрать регион ap-geo и скопировать URL-адрес типа Public в конфиг в переменную logs_url.
+3. Создать bucket для приложения с именем: weightless-manager-logs-домен. Выбрать регион eu-gb, стандартный план.
+
 ## config.json
 Конфигурация приложения с адресами доступных апи и параметрами приложения из App ID.
 
@@ -98,6 +105,9 @@
 
 ### database_mongodb
 ![database_mongodb](https://russiabase.ru/wm/docs/api_img/database_mongodb.png)
+
+### wm_logs
+![wm_logs](https://russiabase.ru/wm/docs/api_img/wm_logs.png)
 
 ## Установка приложения
 Для установки на сервер необходимо создать отдельную директорию под административную панель.\
