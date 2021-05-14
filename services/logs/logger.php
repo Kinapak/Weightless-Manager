@@ -59,10 +59,10 @@
 		  "Authorization: Bearer ".$iam
 		 )
 		));
-		$t=curl_exec($curl);
+		curl_exec($curl);
 		curl_close($curl);
 		
-		return ["response" => $t, "current"=>$current_doc];
+		return ["response" => true];
 	}
 	
 	// Проверка области, определенной в токене

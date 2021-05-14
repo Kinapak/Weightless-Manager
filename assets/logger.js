@@ -13,7 +13,7 @@ $(document).ajaxSuccess(function(event, xhr, options, data){
 			"duration": "0.435"
 		},
 		success: function(result){
-			console.log(result);
+			
 		}
 	});
 });
