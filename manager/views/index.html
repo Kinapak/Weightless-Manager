@@ -3,18 +3,34 @@
 		<div class="panel box-v1">
 			<div class="panel-heading bg-white border-none">
 				<div class="col-md-6 col-sm-6 col-xs-10 text-left padding-0">
-					<h4 class="text-left">Базы данных</h4>
+					<h4 class="text-left">Персональная статистика</h4>
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-2 text-right">
 					<h4>
-						<i class="fa fa-database"></i>
+						<i class="fa fa-pie-chart"></i>
 					</h4>
 				</div>
 			</div>
 			<div class="panel-body text-center">
-				<h1 id="index-db-count"></h1>
-				<p>Подключено</p>
-				<hr>
+				<canvas id="personal"></canvas>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-6" id="all-stat" style="display: none;">
+		<div class="panel box-v1">
+			<div class="panel-heading bg-white border-none">
+				<div class="col-md-8 col-sm-8 col-xs-10 text-left padding-0">
+					<h4 class="text-left">Общая статистика приложения</h4>
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-2 text-right">
+					<h4>
+						<i class="fa fa-bar-chart"></i>
+					</h4>
+				</div>
+			</div>
+			<div class="panel-body text-center">
+				<canvas id="stat"></canvas>
 			</div>
 		</div>
 	</div>
@@ -38,10 +54,167 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="col-md-6">
+		<div class="panel box-v1">
+			<div class="panel-heading bg-white border-none">
+				<div class="col-md-6 col-sm-6 col-xs-10 text-left padding-0">
+					<h4 class="text-left">Базы данных</h4>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-2 text-right">
+					<h4>
+						<i class="fa fa-database"></i>
+					</h4>
+				</div>
+			</div>
+			<div class="panel-body text-center">
+				<h1 id="index-db-count">0</h1>
+				<p>Подключено</p>
+				<hr>
+			</div>
+		</div>
+	</div>
 </div>
 
+<script src="https://russiabase.ru/wm/v0.4.1/assets/chart.min.js"></script>
 <script type="text/javascript">
+	var user = JSON.parse(localStorage.getItem("user_info"));
+	
+	// Запрос логов по пользователю
+	$.ajax({
+		url: config.api_logs + "/get",
+		type: "POST",
+		headers: {
+			"Authorization": "Bearer " + localStorage.getItem("user_token")
+		},
+		data: {
+			"user-token": localStorage.getItem("user_token"),
+			"user": user.email
+		},
+		success: function(result){
+			var logs = [0, 0, 0];
+			
+			// Разбор на операции
+			$.each(result.logs, function(id, val){
+				if(val.user == null) return; // Пропуск нулей
+				
+				if(val.operation.match(/token/)){
+					logs[0]++;
+					logs[2] += parseInt(val.duration) / 1000;
+				}
+				if(val.operation.match(/database/)){
+					logs[1]++;
+					logs[2] += parseInt(val.duration) / 1000;
+				}
+			});
+			logs[2] = logs[2].toFixed(3);
+			
+			// Вывод в график
+			var myChart = new Chart($("#personal"), {
+				type: 'bar',
+				data: {
+					labels: ["Аутентификаций", "Запросов к БД", "Время обработки: с,мс"],
+					datasets: [{
+						label: "",
+						data: logs,
+						backgroundColor: [
+							"rgba(54, 162, 235, 0.4)",
+							"rgba(75, 192, 192, 0.4)",
+							"rgba(255, 205, 86, 0.4)"
+						],
+						borderColor: [
+							"rgba(54, 162, 235, 1)",
+							"rgba(75, 192, 192, 1)",
+							"rgba(255, 205, 86, 1)"
+						],
+						borderWidth: 1.5
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					},
+					plugins: {
+						legend: {
+							display: false
+						}
+					}
+				}
+			});
+		}
+	});
+	
+	// Запрос логов по приложению
+	if($(".settings").length){
+		$("#all-stat").show();
+		
+		$.ajax({
+			url: config.api_logs + "/get",
+			type: "POST",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"user-token": localStorage.getItem("user_token")
+			},
+			success: function(result){
+				var logs = [0, 0, 0, 0];
+				
+				// Разбор на операции
+				$.each(result.logs, function(id, val){
+					if(val.user == null) return; // Пропуск нулей
+					
+					if(val.operation.match(/token/)) logs[0]++;
+					if(val.operation.match(/database/)) logs[1]++;
+					if(val.operation.match(/app/)) logs[2]++;
+					logs[3] += parseInt(val.duration) / 1000; // Время по всему приложению
+				});
+				logs[3] = logs[3].toFixed(3);
+				
+				// Вывод в график
+				var myChart = new Chart($("#stat"), {
+					type: 'bar',
+					data: {
+						labels: ["Аутентификаций", "Запросы к БД", "Настройки", "Время: с,мс"],
+						datasets: [{
+							label: "",
+							data: logs,
+							backgroundColor: [
+								"rgba(54, 162, 235, 0.4)",
+								"rgba(75, 192, 192, 0.4)",
+								"rgba(153, 102, 255, 0.4)",
+								"rgba(255, 205, 86, 0.4)"
+							],
+							borderColor: [
+								"rgba(54, 162, 235, 1)",
+								"rgba(75, 192, 192, 1)",
+								"rgba(153, 102, 255, 1)",
+								"rgba(255, 205, 86, 1)"
+							],
+							borderWidth: 1.5
+						}]
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						},
+						plugins: {
+							legend: {
+								display: false
+							}
+						}
+					}
+				});
+			}
+		});
+	}
+	
 	setTimeout(function(){
+		// Вывод количества подключенных БД
 		$("#index-db-count").text($(".databases-list:eq(0) li").length);
 	}, 500);
 </script>

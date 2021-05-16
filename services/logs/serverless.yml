@@ -11,6 +11,11 @@ functions:
     name: logs/setLog
     events:
       - http: POST logs/setLog
+  getLogs:
+    handler: logger.getLogs
+    name: logs/getLogs
+    events:
+      - http: POST logs/getLogs
 
 plugins:
   - serverless-openwhisk
