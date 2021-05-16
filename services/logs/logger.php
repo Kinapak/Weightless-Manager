@@ -1,7 +1,7 @@
 <?php
 	require_once("_config.php");
 	
-	// Добавление нового лога. Параметры: user-token, operation, duration
+	// Добавление нового лога
 	function setLog(array $args): array{
 		global $logs_key, $logs_url, $bucket_prefix;
 		
@@ -46,7 +46,7 @@
 		curl_close($curl);
 		
 		// Добавление нового лога
-		$current_doc .= "UK-".date("H:i:s")." ".$args["operation"]." ".$args["duration"]."\r\n";
+		$current_doc .= "UK-".date("H:i:s")." ".$args["log"]."\r\n";
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
 		 CURLOPT_URL => $logs_url."/".$bucket_name."/".$file_name,
