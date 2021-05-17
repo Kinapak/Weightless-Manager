@@ -168,7 +168,7 @@
 					
 					if(val.operation.match(/token/)) logs[0]++;
 					if(val.operation.match(/database/)) logs[1]++;
-					if(val.operation.match(/app/)) logs[2]++;
+					if(val.operation.match(/management/)) logs[2]++;
 					logs[3] += parseInt(val.duration) / 1000; // Время по всему приложению
 				});
 				logs[3] = logs[3].toFixed(3);
