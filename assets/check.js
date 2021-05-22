@@ -57,8 +57,8 @@ function checkToken(){
 			} else if($(".preloader").height()){ // Если токен валиден - удаляем прелоадер и загружаем настройки
 				checkVersion(result.response.settings || false); // Сперва проверка на новую версию
 				
-				// Меню настроек
-				if(result.response.settings.length != 0){
+				// Добавление меню настроек, если входит администратор, и настройки еще не добавлены
+				if(result.response.settings.length != 0 && !$(".settings .tree li").length){
 					$.each(result.response.settings, function(link, name){
 						$(".settings .tree").append("<li><a href='views/" + link + ".html'>" + name + "</a></li>");
 					});
