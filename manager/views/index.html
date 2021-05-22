@@ -213,8 +213,13 @@
 		});
 	}
 	
-	setTimeout(function(){
+	var db_count_i = 0;
+	var db_count = setInterval(function(){
+		// Удаление интервала, когда прогрузятся базы данных или по счетчику, если нет подключений
+		if($(".databases-list:eq(0) li").length || db_count_i == 3) clearInterval(db_count);
+		
 		// Вывод количества подключенных БД
 		$("#index-db-count").text($(".databases-list:eq(0) li").length);
+		db_count_i++;
 	}, 500);
 </script>
