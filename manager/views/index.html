@@ -102,12 +102,12 @@
 					logs[0]++;
 					logs[2] += parseInt(val.duration) / 1000;
 				}
-				if(val.operation.match(/database/)){
+				if(val.operation.match(/database/) && !val.operation.match(/list/)){ // Кроме списка БД
 					logs[1]++;
 					logs[2] += parseInt(val.duration) / 1000;
 				}
 			});
-			logs[2] = logs[2].toFixed(3);
+			logs[2] = logs[2].toFixed(3); // Время по пользователю без Cloudant
 			
 			// Вывод в график
 			var myChart = new Chart($("#personal"), {
@@ -167,8 +167,8 @@
 					if(val.user == null) return; // Пропуск нулей
 					
 					if(val.operation.match(/token/)) logs[0]++;
-					if(val.operation.match(/database/)) logs[1]++;
-					if(val.operation.match(/management/)) logs[2]++;
+					if(val.operation.match(/database/) && !val.operation.match(/list/)) logs[1]++; // Кроме списка БД
+					if(val.operation.match(/management/) || val.operation.match(/list/)) logs[2]++;
 					logs[3] += parseInt(val.duration) / 1000; // Время по всему приложению
 				});
 				logs[3] = logs[3].toFixed(3);
