@@ -21,11 +21,10 @@
 		$document = $document["document"];
 		
 		// Замена нужного ключа
-		$keys = $document["keys"];
-		$keys[$type."_key"] = $key;
+		$document["keys"][$type."_key"] = $key;
 		
 		// Обновление настроек приложения
-		$put = json_encode(["_rev" => $document["_rev"], "keys" => $keys]);
+		$put = json_encode($document);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
 		 CURLOPT_URL => $cloudant_url."applications/".$document["_id"],
