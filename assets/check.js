@@ -65,6 +65,7 @@ function checkToken(){
 				} else{
 					$(".settings").remove();
 					$("#all-stat").remove();
+					$("#credits-box").remove();
 				}
 				
 				// Удаление прелоадера

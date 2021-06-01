@@ -74,6 +74,26 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="col-md-6" id="credits-box" style="display: none;">
+		<div class="panel box-v1">
+			<div class="panel-heading bg-white border-none">
+				<div class="col-md-6 col-sm-6 col-xs-10 text-left padding-0">
+					<h4 class="text-left">Баланс</h4>
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-2 text-right">
+					<h4>
+						<i class="fa fa-rub"></i>
+					</h4>
+				</div>
+			</div>
+			<div class="panel-body text-center">
+				<h1 id="credits">0</h1>
+				<p>руб.</p>
+				<hr>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="https://russiabase.ru/wm/v0.5.0/assets/chart.min.js"></script>
@@ -168,7 +188,8 @@
 					
 					if(val.operation.match(/token/)) logs[0]++;
 					if(val.operation.match(/database/) && !val.operation.match(/list/)) logs[1]++; // Кроме списка БД
-					if(val.operation.match(/management/) || val.operation.match(/list/)) logs[2]++;
+					// Список БД и весь менеджмент, кроме баланса
+					if((val.operation.match(/management/) && !val.operation.match(/credits/)) || val.operation.match(/list/)) logs[2]++;
 					logs[3] += parseInt(val.duration) / 1000; // Время по всему приложению
 				});
 				logs[3] = logs[3].toFixed(3);
@@ -222,4 +243,23 @@
 		$("#index-db-count").text($(".databases-list:eq(0) li").length);
 		db_count_i++;
 	}, 500);
+	
+	// Вывод баланса приложения
+	if($(".settings").length){
+		$("#credits-box").show();
+		
+		$.ajax({
+			url: config.api_app_management + "/credits",
+			type: "POST",
+			headers: {
+				"Authorization": "Bearer " + localStorage.getItem("user_token")
+			},
+			data: {
+				"iam-token": localStorage.getItem("IAM_token")
+			},
+			success: function(result){
+				$("#credits").text(result.credits);
+			}
+		});
+	}
 </script>

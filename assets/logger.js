@@ -1,4 +1,4 @@
-let timers = {}
+let timers = {};
 
 // Прослушивание событий отправки AJAX-запросов для запуска таймера к каждому запросу
 $(document).ajaxSend(function(event, xhr, options){

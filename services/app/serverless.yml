@@ -21,6 +21,11 @@ functions:
     name: app/removeUser
     events:
       - http: POST app/removeUser
+  getCredits:
+    handler: management.getCredits
+    name: app/getCredits
+    events:
+      - http: POST app/getCredits
 
 plugins:
   - serverless-openwhisk

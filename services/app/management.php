@@ -169,3 +169,14 @@
 		if(!$upd) return ["response" => ["error" => "Что-то пошло не так"]];
 		else return ["response" => "Successful"];
 	}
+	
+	// Получение текущего баланса
+	function getCredits(array $args): array{
+		$origin = explode("//", $args["__ow_headers"]["origin"]);
+		
+		$document = getDocument($args["iam-token"], "applications", $origin[1]);
+		$credits = $document["document"]["credits"];
+		
+		return ["credits" => $credits];
+	}
+	}
