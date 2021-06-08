@@ -7,8 +7,8 @@ $(document).ajaxSend(function(event, xhr, options){
 
 // Прослушивание успехов AJAX-ивентов и их логирование
 $(document).ajaxSuccess(function(event, xhr, options, data){
-	// Если запрос был не к облаку или был к логированию, то выход
-	if(!options.url.match(/cloud/) || options.url.match(/wm_logs/))
+	// Если запрос был не к облаку или был к не учитываемой функции, то выход
+	if(!options.url.match(/cloud/) || options.url.match(/wm_logs/) || options.url.match(/payment/))
 		return false;
 	
 	// Сборка данных для лога

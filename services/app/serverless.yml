@@ -26,6 +26,13 @@ functions:
     name: app/getCredits
     events:
       - http: POST app/getCredits
+  payment:
+    handler: management.payment
+    name: app/payment
+    memory: 2048
+    timeout: 600
+    events:
+      - http: POST app/payment
 
 plugins:
   - serverless-openwhisk

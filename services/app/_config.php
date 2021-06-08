@@ -4,6 +4,15 @@
 	
 	$key_types = array("PUBLIC", "PRIVATE"); // Допустимые типы ключей
 	
+	// Префикс для папки с логами каждого приложения
+	$bucket_prefix = "weightlessmanager-logs-";
+	
+	// Ключ для IAM-токена логирования
+	$logs_key = "DsR9SBDvuUiLAQgpeA3gjDrU7a3_GasQlMaERL98RMV4";
+	
+	// URL для запросов к логам
+	$logs_url = "https://s3.eu-gb.cloud-object-storage.appdomain.cloud";
+	
 	// Получение документа из Cloudant
 	function getDocument($iam, $db, $application): array{
 		global $cloudant_url;
@@ -22,4 +31,21 @@
 		curl_close($curl);
 		
 		return ["document" => $document];
+	}
+	
+	// Проверка области, определенной в токене
+	function checkScope($token, $header): array{
+		$token = explode(".", $token);
+		$token = json_decode(base64_decode($token[1]), true);
+		$header = explode("//", $header);
+		$origin = false;
+		
+		foreach(explode(" ", $token["scope"]) as $scope){
+			if($scope == $header[1]){
+				$origin = true;
+				break;
+			}
+		}
+		
+		return ["origin" => $origin, "domain" => $header[1]];
 	}

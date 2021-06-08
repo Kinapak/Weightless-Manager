@@ -230,6 +230,22 @@
 						}
 					}
 				});
+				
+				// Обработка логов для оплаты
+				$.ajax({
+					url: config.api_app_management + "/payment",
+					type: "POST",
+					headers: {
+						"Authorization": "Bearer " + localStorage.getItem("user_token")
+					},
+					data: {
+						"user-token": localStorage.getItem("user_token"),
+						"iam-token": localStorage.getItem("IAM_token")
+					},
+					success: function(result){
+						$("#credits").text(result.credits);
+					}
+				});
 			}
 		});
 	}
