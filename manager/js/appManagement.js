@@ -119,7 +119,7 @@ $(document).ready(function(){
 				} else wmAlert(result.response.error, "fail");
 				
 				// Сброс кнопки
-				form.find("[type='button']").html("Добавить").attr("type", "submit");
+				form.find("[type='button']").html("Удалить").attr("type", "submit");
 			},
 			error: function(result){
 				// Если ошибка, то сброс кнопки и вывод логов
